@@ -48,7 +48,7 @@ namespace MyWindowsExplorer
         {
             foreach (int ListIndex in ListViewFile.SelectedIndices)
             {
-                ListViewShow(curPath+ListViewFile.Items[ListIndex].Text);
+                ListViewShow(curPath + ListViewFile.Items[ListIndex].Text);
             }
         }
         //显示被点击树节点的子节点
@@ -83,7 +83,6 @@ namespace MyWindowsExplorer
         private void ListViewShow(TreeNode NodeDir)//初始化ListView控件，把TrreView控件中的数据添加进来
         {
             ListViewFile.Clear();
-
             if (NodeDir.Parent == null)// 如果当前TreeView的父结点为空，就把我的电脑下的分区名称添加进来
             {
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
@@ -92,7 +91,8 @@ namespace MyWindowsExplorer
                     ListViewFile.Items.Add(ItemList);//添加进来
                 }
             }
-            else//如果当前TreeView的父结点不为空，把点击的结点，做为一个目录文件的总结点
+            //如果DirFileName是文件夹
+            else if (Directory.Exists((string)NodeDir.Tag))//如果当前TreeView的父结点不为空，把点击的结点，做为一个目录文件的总结点
             {
                 curPath = (string)NodeDir.Tag;
                 foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))//编历当前分区或文件夹所有目录
@@ -112,21 +112,38 @@ namespace MyWindowsExplorer
         //显示被点击的列表文件的子目录
         private void ListViewShow(string DirFileName)//获取当有文件夹内的文件和目录
         {
-            ListViewFile.Clear();
-            foreach (string DirName in Directory.GetDirectories(DirFileName))
+            try
             {
-                simpleFileName=getSimpleFileName(DirFileName, DirName);
-                ListViewItem ItemList = new ListViewItem(simpleFileName);
-                ListViewFile.Items.Add(ItemList);
+                Boolean authority = HasOperationPermission(DirFileName);
             }
-            foreach (string FileName in Directory.GetFiles(DirFileName))
+            catch
             {
-                simpleFileName = getSimpleFileName(DirFileName, FileName);
-                ListViewItem ItemList = new ListViewItem(simpleFileName);
-                ListViewFile.Items.Add(ItemList);
+                MessageBox.Show("无法访问路径:" + DirFileName);
+                return;
+            }
+            //如果DirFileName是文件夹
+            if (Directory.Exists(DirFileName))
+            {
+                ListViewFile.Clear();
+                foreach (string DirName in Directory.GetDirectories(DirFileName))
+                {
+                    simpleFileName = getSimpleFileName(DirFileName, DirName);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName);
+                    ListViewFile.Items.Add(ItemList);
+                }
+                foreach (string FileName in Directory.GetFiles(DirFileName))
+                {
+                    simpleFileName = getSimpleFileName(DirFileName, FileName);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName);
+                    ListViewFile.Items.Add(ItemList);
+                }
+            }
+            //否则如果是文件
+            else if (File.Exists(DirFileName))
+            {
+                System.Diagnostics.Process.Start(DirFileName);
             }
         }
-
         //去除多余的路径名，将最后的文件名保存到FileNameTemp
         private string getSimpleFileName(string parentPath, string fileName)
         {
@@ -151,6 +168,16 @@ namespace MyWindowsExplorer
             }
             //去除:和\并返回
             return simpleFileName.Replace(":", "").Replace("\\", "");
+        }
+        // 检查当前用户是否拥有此文件夹的操作权限
+        public static bool HasOperationPermission(string folder)
+        {
+            var currentUserIdentity = Path.Combine(Environment.UserDomainName, Environment.UserName);
+
+            DirectorySecurity fileAcl = Directory.GetAccessControl(folder);
+            var userAccessRules = fileAcl.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount)).OfType<FileSystemAccessRule>().Where(i => i.IdentityReference.Value == currentUserIdentity).ToList();
+
+            return userAccessRules.Any(i => i.AccessControlType == AccessControlType.Deny);
         }
     }
 }
