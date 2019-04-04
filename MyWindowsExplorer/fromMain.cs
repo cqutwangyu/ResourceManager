@@ -15,6 +15,8 @@ namespace MyWindowsExplorer
     public partial class fromMain : Form
     {
         string curPath = null;
+        string lastPath = null;
+        string temp = null;
         string simpleFileName = null;
         //主窗口构造方法
         public fromMain()
@@ -115,13 +117,13 @@ namespace MyWindowsExplorer
                     return;
                 }
                 curPath = (string)NodeDir.Tag;
-                foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))//编历当前分区或文件夹所有目录
+                foreach (string DirName in Directory.GetDirectories(curPath))//编历当前分区或文件夹所有目录
                 {
                     simpleFileName = getSimpleFileName(curPath, DirName);
                     ListViewItem ItemList = new ListViewItem(simpleFileName);
                     ListViewFile.Items.Add(ItemList);
                 }
-                foreach (string FileName in Directory.GetFiles((string)NodeDir.Tag))//编历当前分区或文件夹所有目录的文件
+                foreach (string FileName in Directory.GetFiles(curPath))//编历当前分区或文件夹所有目录的文件
                 {
                     simpleFileName = getSimpleFileName(curPath, FileName);
                     ListViewItem ItemList = new ListViewItem(simpleFileName);
@@ -195,10 +197,21 @@ namespace MyWindowsExplorer
         {
             var currentUserIdentity = Path.Combine(Environment.UserDomainName, Environment.UserName);
 
+            //获取访问控制列表，如果无法访问，会在这里抛出异常
             DirectorySecurity fileAcl = Directory.GetAccessControl(folder);
             var userAccessRules = fileAcl.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount)).OfType<FileSystemAccessRule>().Where(i => i.IdentityReference.Value == currentUserIdentity).ToList();
 
             return userAccessRules.Any(i => i.AccessControlType == AccessControlType.Deny);
+        }
+
+        private void toolStripButton1_Click(object sender, EventArgs e)
+        {
+            //上一级目录
+            if (curPath != null)
+            {
+                lastPath = curPath.Substring(0, curPath.LastIndexOf("\\") + 1);
+                ListViewShow(lastPath);
+            }
         }
     }
 }
