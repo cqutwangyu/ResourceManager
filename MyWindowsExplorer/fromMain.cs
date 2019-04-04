@@ -68,6 +68,16 @@ namespace MyWindowsExplorer
                 }// end 
                 else// 不为空，显示分区下文件夹
                 {
+                    try
+                    {
+                        //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
+                        Boolean authority = HasOperationPermission((string)NodeDir.Tag);
+                    }
+                    catch
+                    {
+                        MessageBox.Show("无法访问路径:" + (string)NodeDir.Tag);
+                        return;
+                    }
                     curPath = (string)NodeDir.Tag;
                     foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))
                     {
@@ -94,6 +104,16 @@ namespace MyWindowsExplorer
             //如果DirFileName是文件夹
             else if (Directory.Exists((string)NodeDir.Tag))//如果当前TreeView的父结点不为空，把点击的结点，做为一个目录文件的总结点
             {
+                try
+                {
+                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
+                    Boolean authority = HasOperationPermission((string)NodeDir.Tag);
+                }
+                catch
+                {
+                    MessageBox.Show("无法访问路径:" + (string)NodeDir.Tag);
+                    return;
+                }
                 curPath = (string)NodeDir.Tag;
                 foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))//编历当前分区或文件夹所有目录
                 {
@@ -114,6 +134,7 @@ namespace MyWindowsExplorer
         {
             try
             {
+                //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
                 Boolean authority = HasOperationPermission(DirFileName);
             }
             catch
