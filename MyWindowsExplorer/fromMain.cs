@@ -14,6 +14,8 @@ namespace MyWindowsExplorer
 {
     public partial class fromMain : Form
     {
+        string curPath = null;
+        string simpleFileName = null;
         //主窗口构造方法
         public fromMain()
         {
@@ -25,11 +27,31 @@ namespace MyWindowsExplorer
         private void fromMain_Load(object sender, EventArgs e)
         {
             //创建根节点
-            TreeNode CountNode = new TreeNode("我的电脑");
+            TreeNode CountNode = new TreeNode("此电脑");
             //添加根节点
             TreeViewFile.Nodes.Add(CountNode);
+            //初始化ListView控件
+            ListViewShow(CountNode);
+            //列表形式显示
+            ListViewFile.View = View.List;
         }
-        //显示被点击节点的子目录
+        //树节点点击事件
+        private void TreeViewFile_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            //树节点显示
+            TreeViewShow(e.Node);
+            //列表显示
+            ListViewShow(e.Node);
+        }
+        //列表文件夹双击事件
+        private void ListViewFile_DoubleClick(object sender, EventArgs e)
+        {
+            foreach (int ListIndex in ListViewFile.SelectedIndices)
+            {
+                ListViewShow(curPath+ListViewFile.Items[ListIndex].Text);
+            }
+        }
+        //显示被点击树节点的子节点
         private void TreeViewShow(TreeNode NodeDir)//初始化TreeView控件
         {
             if (NodeDir.Nodes.Count == 0)
@@ -38,26 +60,97 @@ namespace MyWindowsExplorer
                 {
                     foreach (string DrvName in Directory.GetLogicalDrives())
                     {
-                        TreeNode aNode = new TreeNode(DrvName);
+                        simpleFileName = getSimpleFileName(curPath, DrvName);
+                        TreeNode aNode = new TreeNode(simpleFileName);
                         aNode.Tag = DrvName;
                         NodeDir.Nodes.Add(aNode);
                     }
                 }// end 
                 else// 不为空，显示分区下文件夹
                 {
+                    curPath = (string)NodeDir.Tag;
                     foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))
                     {
-                        TreeNode aNode = new TreeNode(DirName);
+                        simpleFileName = getSimpleFileName(curPath, DirName);
+                        TreeNode aNode = new TreeNode(simpleFileName);
                         aNode.Tag = DirName;
                         NodeDir.Nodes.Add(aNode);
                     }
                 }
             }
         }
-        //树节点点击事件
-        private void TreeViewFile_AfterSelect(object sender, TreeViewEventArgs e)
+        //显示被点击树节点的文件列表
+        private void ListViewShow(TreeNode NodeDir)//初始化ListView控件，把TrreView控件中的数据添加进来
         {
-            TreeViewShow(e.Node);
+            ListViewFile.Clear();
+
+            if (NodeDir.Parent == null)// 如果当前TreeView的父结点为空，就把我的电脑下的分区名称添加进来
+            {
+                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
+                {
+                    ListViewItem ItemList = new ListViewItem(DrvName);
+                    ListViewFile.Items.Add(ItemList);//添加进来
+                }
+            }
+            else//如果当前TreeView的父结点不为空，把点击的结点，做为一个目录文件的总结点
+            {
+                curPath = (string)NodeDir.Tag;
+                foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))//编历当前分区或文件夹所有目录
+                {
+                    simpleFileName = getSimpleFileName(curPath, DirName);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName);
+                    ListViewFile.Items.Add(ItemList);
+                }
+                foreach (string FileName in Directory.GetFiles((string)NodeDir.Tag))//编历当前分区或文件夹所有目录的文件
+                {
+                    simpleFileName = getSimpleFileName(curPath, FileName);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName);
+                    ListViewFile.Items.Add(ItemList);
+                }
+            }
+        }
+        //显示被点击的列表文件的子目录
+        private void ListViewShow(string DirFileName)//获取当有文件夹内的文件和目录
+        {
+            ListViewFile.Clear();
+            foreach (string DirName in Directory.GetDirectories(DirFileName))
+            {
+                simpleFileName=getSimpleFileName(DirFileName, DirName);
+                ListViewItem ItemList = new ListViewItem(simpleFileName);
+                ListViewFile.Items.Add(ItemList);
+            }
+            foreach (string FileName in Directory.GetFiles(DirFileName))
+            {
+                simpleFileName = getSimpleFileName(DirFileName, FileName);
+                ListViewItem ItemList = new ListViewItem(simpleFileName);
+                ListViewFile.Items.Add(ItemList);
+            }
+        }
+
+        //去除多余的路径名，将最后的文件名保存到FileNameTemp
+        private string getSimpleFileName(string parentPath, string fileName)
+        {
+            //假设curPath="C:\"
+            curPath = parentPath;
+            //如果父路径不为空
+            if (parentPath != null)
+            {
+                //如果最后一个字符不为\，如G:\Maven
+                if (curPath.LastIndexOf("\\") != curPath.Length - 1)
+                {
+                    //在最后加上\，如G:\Maven\
+                    curPath += "\\";
+                }
+                //去除父路径
+                simpleFileName = fileName.Replace(parentPath, "");
+            }
+            else
+            {
+                //否则直接赋值
+                simpleFileName = fileName;
+            }
+            //去除:和\并返回
+            return simpleFileName.Replace(":", "").Replace("\\", "");
         }
     }
 }
