@@ -18,6 +18,11 @@ namespace MyWindowsExplorer
         string lastPath = null;
         string temp = null;
         string simpleFileName = null;
+        List<string> pathList=new List<string>();
+        int pathSize = 0;
+        int pathIndex = 0;
+        //头节点
+        TreeNode headNode;
         //主窗口构造方法
         public fromMain()
         {
@@ -29,11 +34,11 @@ namespace MyWindowsExplorer
         private void fromMain_Load(object sender, EventArgs e)
         {
             //创建根节点
-            TreeNode CountNode = new TreeNode("此电脑");
+            headNode = new TreeNode("此电脑");
             //添加根节点
-            TreeViewFile.Nodes.Add(CountNode);
+            TreeViewFile.Nodes.Add(headNode);
             //初始化ListView控件
-            ListViewShow(CountNode);
+            ListViewShow(headNode);
             //列表形式显示
             ListViewFile.View = View.List;
         }
@@ -117,6 +122,9 @@ namespace MyWindowsExplorer
                     return;
                 }
                 curPath = (string)NodeDir.Tag;
+                pathList.Insert(pathIndex, curPath);
+                pathSize++;
+                pathIndex++;
                 foreach (string DirName in Directory.GetDirectories(curPath))//编历当前分区或文件夹所有目录
                 {
                     simpleFileName = getSimpleFileName(curPath, DirName);
@@ -144,6 +152,9 @@ namespace MyWindowsExplorer
                 MessageBox.Show("无法访问路径:" + DirFileName);
                 return;
             }
+            pathList.Insert(pathIndex, DirFileName);
+            pathSize++;
+            pathIndex++;
             //如果DirFileName是文件夹
             if (Directory.Exists(DirFileName))
             {
@@ -203,14 +214,38 @@ namespace MyWindowsExplorer
 
             return userAccessRules.Any(i => i.AccessControlType == AccessControlType.Deny);
         }
-
-        private void toolStripButton1_Click(object sender, EventArgs e)
+        //返回上一级目录
+        private void goBack_Click(object sender, EventArgs e)
+        {
+            ListViewFile.Clear();
+            pathIndex-=2;
+            //上一级目录
+            if (pathIndex >= 0)
+            {
+                string path = pathList[pathIndex];
+                ListViewShow(path);
+            }
+            else
+            {
+                curPath = null;
+                pathIndex=0;
+                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
+                {
+                    ListViewItem ItemList = new ListViewItem(DrvName);
+                    ListViewFile.Items.Add(ItemList);//添加进来
+                }
+            }
+        }
+        //前进到下一级路径
+        private void forward_Click(object sender, EventArgs e)
         {
             //上一级目录
-            if (curPath != null)
+            if (pathIndex != pathSize && pathIndex+1 < pathSize)
             {
-                lastPath = curPath.Substring(0, curPath.LastIndexOf("\\") + 1);
-                ListViewShow(lastPath);
+                ListViewFile.Clear();
+                pathIndex++;
+                string path = pathList[pathIndex];
+                ListViewShow(path);
             }
         }
     }
