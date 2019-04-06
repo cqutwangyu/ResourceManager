@@ -19,8 +19,9 @@ namespace MyWindowsExplorer
         string temp = null;
         string simpleFileName = null;
         List<string> pathList=new List<string>();
+        Boolean addPath = true;
         int pathSize = 0;
-        int pathIndex = 0;
+        int pathIndex = -1;
         //头节点
         TreeNode headNode;
         //主窗口构造方法
@@ -95,6 +96,7 @@ namespace MyWindowsExplorer
                     }
                 }
             }
+            updatePathButtonState();
         }
         //显示被点击树节点的文件列表
         private void ListViewShow(TreeNode NodeDir)//初始化ListView控件，把TrreView控件中的数据添加进来
@@ -122,9 +124,9 @@ namespace MyWindowsExplorer
                     return;
                 }
                 curPath = (string)NodeDir.Tag;
-                pathList.Insert(pathIndex, curPath);
                 pathSize++;
                 pathIndex++;
+                pathList.Insert(pathIndex, curPath);
                 foreach (string DirName in Directory.GetDirectories(curPath))//编历当前分区或文件夹所有目录
                 {
                     simpleFileName = getSimpleFileName(curPath, DirName);
@@ -152,9 +154,17 @@ namespace MyWindowsExplorer
                 MessageBox.Show("无法访问路径:" + DirFileName);
                 return;
             }
-            pathList.Insert(pathIndex, DirFileName);
-            pathSize++;
-            pathIndex++;
+            curPath = DirFileName;
+            if (addPath)
+            {
+                pathSize++;
+                pathIndex++;
+                pathList.Insert(pathIndex, curPath);
+            }
+            else
+            {
+                addPath = true;
+            }
             //如果DirFileName是文件夹
             if (Directory.Exists(DirFileName))
             {
@@ -177,6 +187,8 @@ namespace MyWindowsExplorer
             {
                 System.Diagnostics.Process.Start(DirFileName);
             }
+            //更新路径按钮状态
+            updatePathButtonState();
         }
         //去除多余的路径名，将最后的文件名保存到FileNameTemp
         private string getSimpleFileName(string parentPath, string fileName)
@@ -214,38 +226,121 @@ namespace MyWindowsExplorer
 
             return userAccessRules.Any(i => i.AccessControlType == AccessControlType.Deny);
         }
-        //返回上一级目录
-        private void goBack_Click(object sender, EventArgs e)
+        //left目录
+        private void leftPath_Click(object sender, EventArgs e)
         {
             ListViewFile.Clear();
-            pathIndex-=2;
+            pathIndex-=1;
             //上一级目录
             if (pathIndex >= 0)
             {
                 string path = pathList[pathIndex];
+                //回退路径时不添加路径
+                addPath = false;
                 ListViewShow(path);
             }
             else
             {
+                //回退路径时不添加路径
+                addPath = false;
                 curPath = null;
-                pathIndex=0;
+                pathIndex=-1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
                     ListViewItem ItemList = new ListViewItem(DrvName);
                     ListViewFile.Items.Add(ItemList);//添加进来
                 }
+                updatePathButtonState();
             }
         }
-        //前进到下一级路径
-        private void forward_Click(object sender, EventArgs e)
+        //rigth目录
+        private void rightPath_Click(object sender, EventArgs e)
         {
             //上一级目录
-            if (pathIndex != pathSize && pathIndex+1 < pathSize)
+            if (pathIndex != pathSize)
+            {
+                if (pathIndex + 1 < pathSize)
+                {
+                    //回退路径时不添加路径
+                    addPath = false;
+                    ListViewFile.Clear();
+                    pathIndex++;
+                    string path = pathList[pathIndex];
+                    ListViewShow(path);
+                }
+                else if (pathIndex==0)
+                {
+                    addPath = false;
+                    ListViewFile.Clear();
+                    string path = pathList[pathIndex];
+                    pathIndex++;
+                    ListViewShow(path);
+                }
+            }
+        }
+        //回到上一级目录
+        private void backUp_Click(object sender, EventArgs e)
+        {
+            //去除\
+            string temp = curPath.Replace("\\", "");
+            if (curPath.Length - temp.Length > 1)
+            {
+                addPath = false;
+                string path = curPath.Substring(0, curPath.LastIndexOf("\\"));
+                ListViewShow(path.Substring(0, path.LastIndexOf("\\") + 1));
+            }
+            else
             {
                 ListViewFile.Clear();
-                pathIndex++;
-                string path = pathList[pathIndex];
-                ListViewShow(path);
+                //回退路径时不添加路径
+                addPath = false;
+                curPath = null;
+                pathIndex = -1;
+                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
+                {
+                    ListViewItem ItemList = new ListViewItem(DrvName);
+                    ListViewFile.Items.Add(ItemList);//添加进来
+                }
+                updatePathButtonState();
+            }
+        }
+        //更新路径按钮状态
+        private void updatePathButtonState()
+        {
+            //左箭头按钮
+            if ( pathIndex >= 0)
+            {
+                leftPathButton.Enabled = true;
+            }
+            else
+            {
+                leftPathButton.Enabled = false;
+            }
+            //右箭头按钮
+            if (pathIndex+1 < pathSize)
+            {
+                rightPathButton.Enabled = true;
+            }
+            else
+            {
+                rightPathButton.Enabled = false;
+            }
+            //上箭头按钮
+            if (curPath != null)
+            {
+                string temp = curPath.Replace("\\", "");
+                if (curPath.Length-temp.Length > 0)
+                {
+                    backUpPathButton.Enabled = true;
+                }
+                else
+                {
+                    backUpPathButton.Enabled = false;
+                }
+            }
+            else
+            {
+                backUpPathButton.Enabled = false;
             }
         }
     }

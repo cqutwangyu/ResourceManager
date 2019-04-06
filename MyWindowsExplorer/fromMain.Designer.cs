@@ -37,9 +37,9 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.goBack = new System.Windows.Forms.ToolStripButton();
-            this.forward = new System.Windows.Forms.ToolStripButton();
-            this.toolStripButton3 = new System.Windows.Forms.ToolStripButton();
+            this.leftPathButton = new System.Windows.Forms.ToolStripButton();
+            this.rightPathButton = new System.Windows.Forms.ToolStripButton();
+            this.backUpPathButton = new System.Windows.Forms.ToolStripButton();
             this.panel4 = new System.Windows.Forms.Panel();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -117,43 +117,47 @@
             // 
             this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.goBack,
-            this.forward,
-            this.toolStripButton3});
+            this.leftPathButton,
+            this.rightPathButton,
+            this.backUpPathButton});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(800, 27);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
-            // goBack
+            // leftPathButton
             // 
-            this.goBack.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.goBack.Image = ((System.Drawing.Image)(resources.GetObject("goBack.Image")));
-            this.goBack.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.goBack.Name = "goBack";
-            this.goBack.Size = new System.Drawing.Size(24, 24);
-            this.goBack.Text = "toolStripButton1";
-            this.goBack.Click += new System.EventHandler(this.goBack_Click);
+            this.leftPathButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.leftPathButton.Enabled = false;
+            this.leftPathButton.Image = ((System.Drawing.Image)(resources.GetObject("leftPathButton.Image")));
+            this.leftPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.leftPathButton.Name = "leftPathButton";
+            this.leftPathButton.Size = new System.Drawing.Size(24, 24);
+            this.leftPathButton.Text = "toolStripButton1";
+            this.leftPathButton.Click += new System.EventHandler(this.leftPath_Click);
             // 
-            // forward
+            // rightPathButton
             // 
-            this.forward.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.forward.Image = ((System.Drawing.Image)(resources.GetObject("forward.Image")));
-            this.forward.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.forward.Name = "forward";
-            this.forward.Size = new System.Drawing.Size(24, 24);
-            this.forward.Text = "toolStripButton2";
-            this.forward.Click += new System.EventHandler(this.forward_Click);
+            this.rightPathButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.rightPathButton.Enabled = false;
+            this.rightPathButton.Image = ((System.Drawing.Image)(resources.GetObject("rightPathButton.Image")));
+            this.rightPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.rightPathButton.Name = "rightPathButton";
+            this.rightPathButton.Size = new System.Drawing.Size(24, 24);
+            this.rightPathButton.Text = "toolStripButton2";
+            this.rightPathButton.Click += new System.EventHandler(this.rightPath_Click);
             // 
-            // toolStripButton3
+            // backUpPathButton
             // 
-            this.toolStripButton3.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButton3.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton3.Image")));
-            this.toolStripButton3.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButton3.Name = "toolStripButton3";
-            this.toolStripButton3.Size = new System.Drawing.Size(24, 24);
-            this.toolStripButton3.Text = "toolStripButton3";
+            this.backUpPathButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.backUpPathButton.Enabled = false;
+            this.backUpPathButton.Image = ((System.Drawing.Image)(resources.GetObject("backUpPathButton.Image")));
+            this.backUpPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.backUpPathButton.Name = "backUpPathButton";
+            this.backUpPathButton.Size = new System.Drawing.Size(24, 24);
+            this.backUpPathButton.Text = "toolStripButton3";
+            this.backUpPathButton.Click += new System.EventHandler(this.backUp_Click);
             // 
             // panel4
             // 
@@ -252,14 +256,14 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.ToolStrip toolStrip1;
-        private System.Windows.Forms.ToolStripButton goBack;
-        private System.Windows.Forms.ToolStripButton forward;
+        private System.Windows.Forms.ToolStripButton leftPathButton;
+        private System.Windows.Forms.ToolStripButton rightPathButton;
         private System.Windows.Forms.Panel panel4;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 文件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 其他ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripButton toolStripButton3;
+        private System.Windows.Forms.ToolStripButton backUpPathButton;
     }
 }
 
