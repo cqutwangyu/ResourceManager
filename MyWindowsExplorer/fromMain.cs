@@ -87,6 +87,7 @@ namespace MyWindowsExplorer
                         return;
                     }
                     curPath = (string)NodeDir.Tag;
+                    curPathText.Text = curPath;
                     foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))
                     {
                         simpleFileName = getSimpleFileName(curPath, DirName);
@@ -124,6 +125,7 @@ namespace MyWindowsExplorer
                     return;
                 }
                 curPath = (string)NodeDir.Tag;
+                curPathText.Text = curPath;
                 pathSize++;
                 pathIndex++;
                 pathList.Insert(pathIndex, curPath);
@@ -155,6 +157,7 @@ namespace MyWindowsExplorer
                 return;
             }
             curPath = DirFileName;
+            curPathText.Text = curPath;
             if (addPath)
             {
                 pathSize++;
@@ -250,6 +253,7 @@ namespace MyWindowsExplorer
                     ListViewItem ItemList = new ListViewItem(DrvName);
                     ListViewFile.Items.Add(ItemList);//添加进来
                 }
+                curPathText.Text = "";
                 updatePathButtonState();
             }
         }
@@ -301,6 +305,7 @@ namespace MyWindowsExplorer
                     ListViewItem ItemList = new ListViewItem(DrvName);
                     ListViewFile.Items.Add(ItemList);//添加进来
                 }
+                curPathText.Text = "";
                 updatePathButtonState();
             }
         }

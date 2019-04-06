@@ -47,6 +47,7 @@
             this.其他ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.curPathText = new System.Windows.Forms.TextBox();
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -106,6 +107,7 @@
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.curPathText);
             this.panel5.Controls.Add(this.toolStrip1);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel5.Location = new System.Drawing.Point(0, 37);
@@ -134,7 +136,7 @@
             this.leftPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.leftPathButton.Name = "leftPathButton";
             this.leftPathButton.Size = new System.Drawing.Size(24, 24);
-            this.leftPathButton.Text = "toolStripButton1";
+            this.leftPathButton.Text = "后退";
             this.leftPathButton.Click += new System.EventHandler(this.leftPath_Click);
             // 
             // rightPathButton
@@ -145,7 +147,7 @@
             this.rightPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.rightPathButton.Name = "rightPathButton";
             this.rightPathButton.Size = new System.Drawing.Size(24, 24);
-            this.rightPathButton.Text = "toolStripButton2";
+            this.rightPathButton.Text = "前进";
             this.rightPathButton.Click += new System.EventHandler(this.rightPath_Click);
             // 
             // backUpPathButton
@@ -156,7 +158,7 @@
             this.backUpPathButton.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.backUpPathButton.Name = "backUpPathButton";
             this.backUpPathButton.Size = new System.Drawing.Size(24, 24);
-            this.backUpPathButton.Text = "toolStripButton3";
+            this.backUpPathButton.Text = "上一级";
             this.backUpPathButton.Click += new System.EventHandler(this.backUp_Click);
             // 
             // panel4
@@ -217,6 +219,13 @@
             this.panel3.Size = new System.Drawing.Size(800, 27);
             this.panel3.TabIndex = 4;
             // 
+            // curPathText
+            // 
+            this.curPathText.Location = new System.Drawing.Point(111, 2);
+            this.curPathText.Name = "curPathText";
+            this.curPathText.Size = new System.Drawing.Size(677, 25);
+            this.curPathText.TabIndex = 1;
+            // 
             // fromMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -264,6 +273,7 @@
         private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 其他ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton backUpPathButton;
+        private System.Windows.Forms.TextBox curPathText;
     }
 }
 
