@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Windows.Forms;
 using System.Security.AccessControl;
+using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace MyWindowsExplorer
 {
@@ -24,8 +23,13 @@ namespace MyWindowsExplorer
         int pathIndex = -1;
         //头节点
         TreeNode headNode;
-        //主窗口构造方法
-        public fromMain()
+        private class IconIndexes{
+            public const int MyComputer = 0;     //我的电脑
+            public const int Folder = 1;   //文件夹关闭
+            public const int File = 2;   //文件夹关闭
+        }
+         //主窗口构造方法
+         public fromMain()
         {
             //主窗控件初始化
             InitializeComponent();
@@ -35,13 +39,17 @@ namespace MyWindowsExplorer
         private void fromMain_Load(object sender, EventArgs e)
         {
             //创建根节点
-            headNode = new TreeNode("此电脑");
+            headNode = new TreeNode("我的电脑", IconIndexes.MyComputer, IconIndexes.MyComputer);
             //添加根节点
-            TreeViewFile.Nodes.Add(headNode);
-            //初始化ListView控件
+            TreeView.Nodes.Add(headNode);
+            //显示ListView
             ListViewShow(headNode);
+            //显示TreeView
+            TreeViewShow(headNode);
+            //TreeView根节点展开
+            TreeView.Nodes[0].Expand();
             //列表形式显示
-            ListViewFile.View = View.List;
+            ListView.View = View.List;
         }
         //树节点点击事件
         private void TreeViewFile_AfterSelect(object sender, TreeViewEventArgs e)
@@ -54,9 +62,9 @@ namespace MyWindowsExplorer
         //列表文件夹双击事件
         private void ListViewFile_DoubleClick(object sender, EventArgs e)
         {
-            foreach (int ListIndex in ListViewFile.SelectedIndices)
+            foreach (int ListIndex in ListView.SelectedIndices)
             {
-                ListViewShow(curPath + ListViewFile.Items[ListIndex].Text);
+                ListViewShow(curPath + ListView.Items[ListIndex].Text);
             }
         }
         //显示被点击树节点的子节点
@@ -69,7 +77,7 @@ namespace MyWindowsExplorer
                     foreach (string DrvName in Directory.GetLogicalDrives())
                     {
                         simpleFileName = getSimpleFileName(curPath, DrvName);
-                        TreeNode aNode = new TreeNode(simpleFileName);
+                        TreeNode aNode = new TreeNode(simpleFileName, IconIndexes.Folder, IconIndexes.Folder);
                         aNode.Tag = DrvName;
                         NodeDir.Nodes.Add(aNode);
                     }
@@ -102,13 +110,13 @@ namespace MyWindowsExplorer
         //显示被点击树节点的文件列表
         private void ListViewShow(TreeNode NodeDir)//初始化ListView控件，把TrreView控件中的数据添加进来
         {
-            ListViewFile.Clear();
+            ListView.Clear();
             if (NodeDir.Parent == null)// 如果当前TreeView的父结点为空，就把我的电脑下的分区名称添加进来
             {
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName);
-                    ListViewFile.Items.Add(ItemList);//添加进来
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListView.Items.Add(ItemList);//添加进来
                 }
             }
             //如果DirFileName是文件夹
@@ -132,14 +140,14 @@ namespace MyWindowsExplorer
                 foreach (string DirName in Directory.GetDirectories(curPath))//编历当前分区或文件夹所有目录
                 {
                     simpleFileName = getSimpleFileName(curPath, DirName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName);
-                    ListViewFile.Items.Add(ItemList);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.Folder);
+                    ListView.Items.Add(ItemList);
                 }
                 foreach (string FileName in Directory.GetFiles(curPath))//编历当前分区或文件夹所有目录的文件
                 {
                     simpleFileName = getSimpleFileName(curPath, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName);
-                    ListViewFile.Items.Add(ItemList);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.File);
+                    ListView.Items.Add(ItemList);
                 }
             }
         }
@@ -171,18 +179,18 @@ namespace MyWindowsExplorer
             //如果DirFileName是文件夹
             if (Directory.Exists(DirFileName))
             {
-                ListViewFile.Clear();
+                ListView.Clear();
                 foreach (string DirName in Directory.GetDirectories(DirFileName))
                 {
                     simpleFileName = getSimpleFileName(DirFileName, DirName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName);
-                    ListViewFile.Items.Add(ItemList);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.Folder);
+                    ListView.Items.Add(ItemList);
                 }
                 foreach (string FileName in Directory.GetFiles(DirFileName))
                 {
                     simpleFileName = getSimpleFileName(DirFileName, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName);
-                    ListViewFile.Items.Add(ItemList);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.File);
+                    ListView.Items.Add(ItemList);
                 }
             }
             //否则如果是文件
@@ -232,7 +240,7 @@ namespace MyWindowsExplorer
         //left目录
         private void leftPath_Click(object sender, EventArgs e)
         {
-            ListViewFile.Clear();
+            ListView.Clear();
             pathIndex-=1;
             //上一级目录
             if (pathIndex >= 0)
@@ -250,8 +258,8 @@ namespace MyWindowsExplorer
                 pathIndex=-1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName);
-                    ListViewFile.Items.Add(ItemList);//添加进来
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListView.Items.Add(ItemList);//添加进来
                 }
                 curPathText.Text = "";
                 updatePathButtonState();
@@ -267,7 +275,7 @@ namespace MyWindowsExplorer
                 {
                     //回退路径时不添加路径
                     addPath = false;
-                    ListViewFile.Clear();
+                    ListView.Clear();
                     pathIndex++;
                     string path = pathList[pathIndex];
                     ListViewShow(path);
@@ -275,7 +283,7 @@ namespace MyWindowsExplorer
                 else if (pathIndex==0)
                 {
                     addPath = false;
-                    ListViewFile.Clear();
+                    ListView.Clear();
                     string path = pathList[pathIndex];
                     pathIndex++;
                     ListViewShow(path);
@@ -295,15 +303,15 @@ namespace MyWindowsExplorer
             }
             else
             {
-                ListViewFile.Clear();
+                ListView.Clear();
                 //回退路径时不添加路径
                 addPath = false;
                 curPath = null;
                 pathIndex = -1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName);
-                    ListViewFile.Items.Add(ItemList);//添加进来
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListView.Items.Add(ItemList);//添加进来
                 }
                 curPathText.Text = "";
                 updatePathButtonState();
@@ -347,6 +355,59 @@ namespace MyWindowsExplorer
             {
                 backUpPathButton.Enabled = false;
             }
+        }
+
+        Dictionary<string, int> extIcon = new Dictionary<string, int>();
+        int i = 0;
+        //根据扩展名获取图标 
+        public int fileExtIcon(string typeExt, FileInfo f)
+        {
+            if (!extIcon.ContainsKey(typeExt) && typeExt != ".exe")
+            {
+                RegistryKey regRead = Registry.ClassesRoot.OpenSubKey(typeExt);
+                if (regRead == null) { return 0; }
+                string subKey = regRead.GetValue("").ToString();
+                RegistryKey regRead1 = Registry.ClassesRoot.OpenSubKey(subKey);
+                if (regRead1 == null) { return 0; }
+                RegistryKey subKey1 = regRead1.OpenSubKey("DefaultIcon");
+                string defaultIcon = subKey1.GetValue("").ToString();
+                string[] defIcon = defaultIcon.Split(',');
+                Icon ic = getExtractIcon(defIcon[0], int.Parse(defIcon[1]));
+                imageList.Images.Add(ic);
+                extIcon.Add(typeExt, i++);
+                return 0;
+            }
+            else if (typeExt == ".exe")
+            {
+                string fullPath = f.FullName;
+                Icon ic = getExtractIcon(fullPath, 0);
+                if (ic != null)
+                {
+                    imageList.Images.Add(ic);
+                    extIcon.Add(typeExt, i++);
+                }
+            }
+            return 0;
+        }
+        //获取系统图标 
+        [DllImport("shell32.dll")]
+        public static extern int ExtractIcon(IntPtr h, string strx, int ii);
+        public Icon getExtractIcon(string fileName, int iIndex)
+        {
+            try
+            {
+                IntPtr hIcon = (IntPtr)ExtractIcon(this.Handle, fileName, iIndex);
+                if (hIcon != IntPtr.Zero)
+                {
+                    Icon icon = Icon.FromHandle(hIcon);
+                    return icon;
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(e.Message, "错误提示", 0, MessageBoxIcon.Error);
+            }
+            return null;
         }
     }
 }

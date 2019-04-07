@@ -28,105 +28,118 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fromMain));
             this.panelLeft = new System.Windows.Forms.Panel();
-            this.TreeViewFile = new System.Windows.Forms.TreeView();
+            this.TreeView = new System.Windows.Forms.TreeView();
             this.panelRight = new System.Windows.Forms.Panel();
-            this.ListViewFile = new System.Windows.Forms.ListView();
-            this.printDocument1 = new System.Drawing.Printing.PrintDocument();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.ListView = new System.Windows.Forms.ListView();
+            this.head = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
-            this.toolStrip1 = new System.Windows.Forms.ToolStrip();
+            this.curPathText = new System.Windows.Forms.TextBox();
+            this.toolStrip = new System.Windows.Forms.ToolStrip();
             this.leftPathButton = new System.Windows.Forms.ToolStripButton();
             this.rightPathButton = new System.Windows.Forms.ToolStripButton();
             this.backUpPathButton = new System.Windows.Forms.ToolStripButton();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.文件ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.工具ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.其他ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.curPathText = new System.Windows.Forms.TextBox();
+            this.Body = new System.Windows.Forms.Panel();
+            this.foot = new System.Windows.Forms.Panel();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
-            this.panel1.SuspendLayout();
+            this.head.SuspendLayout();
             this.panel5.SuspendLayout();
-            this.toolStrip1.SuspendLayout();
+            this.toolStrip.SuspendLayout();
             this.panel4.SuspendLayout();
-            this.menuStrip1.SuspendLayout();
+            this.menuStrip.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.Body.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelLeft
             // 
-            this.panelLeft.Controls.Add(this.TreeViewFile);
+            this.panelLeft.Controls.Add(this.TreeView);
             this.panelLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelLeft.Location = new System.Drawing.Point(0, 0);
             this.panelLeft.Name = "panelLeft";
-            this.panelLeft.Size = new System.Drawing.Size(233, 378);
+            this.panelLeft.Size = new System.Drawing.Size(188, 378);
             this.panelLeft.TabIndex = 0;
             // 
-            // TreeViewFile
+            // TreeView
             // 
-            this.TreeViewFile.Location = new System.Drawing.Point(3, 6);
-            this.TreeViewFile.MinimumSize = new System.Drawing.Size(200, 200);
-            this.TreeViewFile.Name = "TreeViewFile";
-            this.TreeViewFile.Size = new System.Drawing.Size(227, 339);
-            this.TreeViewFile.TabIndex = 2;
-            this.TreeViewFile.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewFile_AfterSelect);
+            this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TreeView.Location = new System.Drawing.Point(0, 0);
+            this.TreeView.MinimumSize = new System.Drawing.Size(200, 200);
+            this.TreeView.Name = "TreeView";
+            this.TreeView.Size = new System.Drawing.Size(200, 378);
+            this.TreeView.TabIndex = 2;
+            this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewFile_AfterSelect);
             // 
             // panelRight
             // 
-            this.panelRight.Controls.Add(this.ListViewFile);
+            this.panelRight.Controls.Add(this.ListView);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRight.Location = new System.Drawing.Point(0, 0);
+            this.panelRight.Location = new System.Drawing.Point(188, 0);
             this.panelRight.Name = "panelRight";
-            this.panelRight.Size = new System.Drawing.Size(800, 378);
+            this.panelRight.Size = new System.Drawing.Size(612, 378);
             this.panelRight.TabIndex = 1;
             // 
-            // ListViewFile
+            // ListView
             // 
-            this.ListViewFile.Location = new System.Drawing.Point(239, 6);
-            this.ListViewFile.MinimumSize = new System.Drawing.Size(300, 300);
-            this.ListViewFile.Name = "ListViewFile";
-            this.ListViewFile.Size = new System.Drawing.Size(549, 339);
-            this.ListViewFile.TabIndex = 0;
-            this.ListViewFile.UseCompatibleStateImageBehavior = false;
-            this.ListViewFile.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
+            this.ListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView.Location = new System.Drawing.Point(0, 0);
+            this.ListView.MinimumSize = new System.Drawing.Size(300, 300);
+            this.ListView.Name = "ListView";
+            this.ListView.Size = new System.Drawing.Size(612, 378);
+            this.ListView.TabIndex = 0;
+            this.ListView.UseCompatibleStateImageBehavior = false;
+            this.ListView.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
             // 
-            // panel1
+            // head
             // 
-            this.panel1.Controls.Add(this.panel5);
-            this.panel1.Controls.Add(this.panel4);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(800, 72);
-            this.panel1.TabIndex = 2;
+            this.head.Controls.Add(this.panel5);
+            this.head.Controls.Add(this.panel4);
+            this.head.Dock = System.Windows.Forms.DockStyle.Top;
+            this.head.Location = new System.Drawing.Point(0, 0);
+            this.head.Name = "head";
+            this.head.Size = new System.Drawing.Size(800, 72);
+            this.head.TabIndex = 2;
             // 
             // panel5
             // 
             this.panel5.Controls.Add(this.curPathText);
-            this.panel5.Controls.Add(this.toolStrip1);
+            this.panel5.Controls.Add(this.toolStrip);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.panel5.Location = new System.Drawing.Point(0, 37);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(800, 35);
             this.panel5.TabIndex = 1;
             // 
-            // toolStrip1
+            // curPathText
             // 
-            this.toolStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.curPathText.Location = new System.Drawing.Point(111, 2);
+            this.curPathText.Name = "curPathText";
+            this.curPathText.Size = new System.Drawing.Size(677, 25);
+            this.curPathText.TabIndex = 1;
+            // 
+            // toolStrip
+            // 
+            this.toolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.toolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.leftPathButton,
             this.rightPathButton,
             this.backUpPathButton});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 0);
-            this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(800, 27);
-            this.toolStrip1.TabIndex = 0;
-            this.toolStrip1.Text = "toolStrip1";
+            this.toolStrip.Location = new System.Drawing.Point(0, 0);
+            this.toolStrip.Name = "toolStrip";
+            this.toolStrip.Size = new System.Drawing.Size(800, 27);
+            this.toolStrip.TabIndex = 0;
+            this.toolStrip.Text = "toolStrip1";
             // 
             // leftPathButton
             // 
@@ -163,25 +176,25 @@
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.menuStrip1);
+            this.panel4.Controls.Add(this.menuStrip);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Top;
             this.panel4.Location = new System.Drawing.Point(0, 0);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(800, 31);
             this.panel4.TabIndex = 0;
             // 
-            // menuStrip1
+            // menuStrip
             // 
-            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
-            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.文件ToolStripMenuItem,
             this.工具ToolStripMenuItem,
             this.其他ToolStripMenuItem});
-            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
-            this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
-            this.menuStrip1.TabIndex = 1;
-            this.menuStrip1.Text = "menuStrip1";
+            this.menuStrip.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip.Name = "menuStrip";
+            this.menuStrip.Size = new System.Drawing.Size(800, 28);
+            this.menuStrip.TabIndex = 1;
+            this.menuStrip.Text = "menuStrip1";
             // 
             // 文件ToolStripMenuItem
             // 
@@ -203,52 +216,61 @@
             // 
             // panel2
             // 
-            this.panel2.Controls.Add(this.panelLeft);
-            this.panel2.Controls.Add(this.panelRight);
+            this.panel2.Controls.Add(this.Body);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(0, 72);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(800, 378);
             this.panel2.TabIndex = 3;
             // 
-            // panel3
+            // Body
             // 
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel3.Location = new System.Drawing.Point(0, 423);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(800, 27);
-            this.panel3.TabIndex = 4;
+            this.Body.Controls.Add(this.panelRight);
+            this.Body.Controls.Add(this.panelLeft);
+            this.Body.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.Body.Location = new System.Drawing.Point(0, 0);
+            this.Body.Name = "Body";
+            this.Body.Size = new System.Drawing.Size(800, 378);
+            this.Body.TabIndex = 2;
             // 
-            // curPathText
+            // foot
             // 
-            this.curPathText.Location = new System.Drawing.Point(111, 2);
-            this.curPathText.Name = "curPathText";
-            this.curPathText.Size = new System.Drawing.Size(677, 25);
-            this.curPathText.TabIndex = 1;
+            this.foot.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.foot.Location = new System.Drawing.Point(0, 423);
+            this.foot.Name = "foot";
+            this.foot.Size = new System.Drawing.Size(800, 27);
+            this.foot.TabIndex = 4;
+            // 
+            // imageList
+            // 
+            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList.ImageSize = new System.Drawing.Size(16, 16);
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // fromMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.panel3);
+            this.Controls.Add(this.foot);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
+            this.Controls.Add(this.head);
             this.Name = "fromMain";
             this.Text = "资源小管家";
             this.Load += new System.EventHandler(this.fromMain_Load);
             this.panelLeft.ResumeLayout(false);
             this.panelRight.ResumeLayout(false);
-            this.panel1.ResumeLayout(false);
+            this.head.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
-            this.toolStrip1.ResumeLayout(false);
-            this.toolStrip1.PerformLayout();
+            this.toolStrip.ResumeLayout(false);
+            this.toolStrip.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            this.menuStrip1.ResumeLayout(false);
-            this.menuStrip1.PerformLayout();
+            this.menuStrip.ResumeLayout(false);
+            this.menuStrip.PerformLayout();
             this.panel2.ResumeLayout(false);
+            this.Body.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -256,24 +278,25 @@
         #endregion
 
         private System.Windows.Forms.Panel panelLeft;
-        private System.Windows.Forms.TreeView TreeViewFile;
+        private System.Windows.Forms.TreeView TreeView;
         private System.Windows.Forms.Panel panelRight;
-        private System.Windows.Forms.ListView ListViewFile;
-        private System.Drawing.Printing.PrintDocument printDocument1;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel head;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.Panel foot;
         private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.ToolStrip toolStrip1;
+        private System.Windows.Forms.ToolStrip toolStrip;
         private System.Windows.Forms.ToolStripButton leftPathButton;
         private System.Windows.Forms.ToolStripButton rightPathButton;
         private System.Windows.Forms.Panel panel4;
-        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.MenuStrip menuStrip;
         private System.Windows.Forms.ToolStripMenuItem 文件ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 工具ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 其他ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton backUpPathButton;
         private System.Windows.Forms.TextBox curPathText;
+        private System.Windows.Forms.ListView ListView;
+        private System.Windows.Forms.Panel Body;
+        private System.Windows.Forms.ImageList imageList;
     }
 }
 
