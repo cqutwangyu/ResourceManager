@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(fromMain));
             this.panelLeft = new System.Windows.Forms.Panel();
             this.TreeView = new System.Windows.Forms.TreeView();
+            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelRight = new System.Windows.Forms.Panel();
             this.ListView = new System.Windows.Forms.ListView();
             this.head = new System.Windows.Forms.Panel();
@@ -49,7 +50,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.Body = new System.Windows.Forms.Panel();
             this.foot = new System.Windows.Forms.Panel();
-            this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
             this.head.SuspendLayout();
@@ -73,12 +73,24 @@
             // TreeView
             // 
             this.TreeView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TreeView.ImageIndex = 0;
+            this.TreeView.ImageList = this.imageList;
             this.TreeView.Location = new System.Drawing.Point(0, 0);
             this.TreeView.MinimumSize = new System.Drawing.Size(200, 200);
             this.TreeView.Name = "TreeView";
+            this.TreeView.SelectedImageIndex = 0;
             this.TreeView.Size = new System.Drawing.Size(200, 378);
             this.TreeView.TabIndex = 2;
             this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewFile_AfterSelect);
+            // 
+            // imageList
+            // 
+            this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
+            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList.Images.SetKeyName(0, "此电脑.png");
+            this.imageList.Images.SetKeyName(1, "disk.png");
+            this.imageList.Images.SetKeyName(2, "folder.png");
+            this.imageList.Images.SetKeyName(3, "file.jpg");
             // 
             // panelRight
             // 
@@ -93,10 +105,13 @@
             // 
             this.ListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
             this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView.LargeImageList = this.imageList;
             this.ListView.Location = new System.Drawing.Point(0, 0);
             this.ListView.MinimumSize = new System.Drawing.Size(300, 300);
             this.ListView.Name = "ListView";
             this.ListView.Size = new System.Drawing.Size(612, 378);
+            this.ListView.SmallImageList = this.imageList;
+            this.ListView.StateImageList = this.imageList;
             this.ListView.TabIndex = 0;
             this.ListView.UseCompatibleStateImageBehavior = false;
             this.ListView.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
@@ -240,12 +255,6 @@
             this.foot.Name = "foot";
             this.foot.Size = new System.Drawing.Size(800, 27);
             this.foot.TabIndex = 4;
-            // 
-            // imageList
-            // 
-            this.imageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
-            this.imageList.ImageSize = new System.Drawing.Size(16, 16);
-            this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             // 
             // fromMain
             // 

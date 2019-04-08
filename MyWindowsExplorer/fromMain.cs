@@ -21,12 +21,18 @@ namespace MyWindowsExplorer
         Boolean addPath = true;
         int pathSize = 0;
         int pathIndex = -1;
+        int fileImgIndex;
+        //存储图标的键值对<文件后缀名，图标的下标>
+        Dictionary<string, int> extIcon = new Dictionary<string, int>();
+        //动态生成图标的下标从4开始，因为集合中0到3下标
+        int i ;
         //头节点
         TreeNode headNode;
         private class IconIndexes{
-            public const int MyComputer = 0;     //我的电脑
-            public const int Folder = 1;   //文件夹关闭
-            public const int File = 2;   //文件夹关闭
+            public const int MyComputer = 0; //我的电脑
+            public const int Disk = 1;     //磁盘
+            public const int Folder = 2;   //文件夹关闭
+            public const int File = 3;   //文件夹关闭
         }
          //主窗口构造方法
          public fromMain()
@@ -38,6 +44,7 @@ namespace MyWindowsExplorer
         //窗口加载事件
         private void fromMain_Load(object sender, EventArgs e)
         {
+            i = imageList.Images.Count;
             //创建根节点
             headNode = new TreeNode("我的电脑", IconIndexes.MyComputer, IconIndexes.MyComputer);
             //添加根节点
@@ -77,7 +84,7 @@ namespace MyWindowsExplorer
                     foreach (string DrvName in Directory.GetLogicalDrives())
                     {
                         simpleFileName = getSimpleFileName(curPath, DrvName);
-                        TreeNode aNode = new TreeNode(simpleFileName, IconIndexes.Folder, IconIndexes.Folder);
+                        TreeNode aNode = new TreeNode(simpleFileName, IconIndexes.Disk, IconIndexes.Disk);
                         aNode.Tag = DrvName;
                         NodeDir.Nodes.Add(aNode);
                     }
@@ -99,7 +106,7 @@ namespace MyWindowsExplorer
                     foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))
                     {
                         simpleFileName = getSimpleFileName(curPath, DirName);
-                        TreeNode aNode = new TreeNode(simpleFileName);
+                        TreeNode aNode = new TreeNode(simpleFileName, IconIndexes.Folder, IconIndexes.Folder);
                         aNode.Tag = DirName;
                         NodeDir.Nodes.Add(aNode);
                     }
@@ -115,7 +122,7 @@ namespace MyWindowsExplorer
             {
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Disk);
                     ListView.Items.Add(ItemList);//添加进来
                 }
             }
@@ -145,8 +152,9 @@ namespace MyWindowsExplorer
                 }
                 foreach (string FileName in Directory.GetFiles(curPath))//编历当前分区或文件夹所有目录的文件
                 {
+                    fileImgIndex = getImgIndex(FileName);
                     simpleFileName = getSimpleFileName(curPath, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.File);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, fileImgIndex);
                     ListView.Items.Add(ItemList);
                 }
             }
@@ -188,14 +196,16 @@ namespace MyWindowsExplorer
                 }
                 foreach (string FileName in Directory.GetFiles(DirFileName))
                 {
+                    fileImgIndex = getImgIndex(FileName);
                     simpleFileName = getSimpleFileName(DirFileName, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, IconIndexes.File);
+                    ListViewItem ItemList = new ListViewItem(simpleFileName, fileImgIndex);
                     ListView.Items.Add(ItemList);
                 }
             }
-            //否则如果是文件
+            //否则如果被打开的是文件
             else if (File.Exists(DirFileName))
             {
+                //启动该文件
                 System.Diagnostics.Process.Start(DirFileName);
             }
             //更新路径按钮状态
@@ -258,7 +268,7 @@ namespace MyWindowsExplorer
                 pathIndex=-1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Disk);
                     ListView.Items.Add(ItemList);//添加进来
                 }
                 curPathText.Text = "";
@@ -310,7 +320,7 @@ namespace MyWindowsExplorer
                 pathIndex = -1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
                 {
-                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Folder);
+                    ListViewItem ItemList = new ListViewItem(DrvName, IconIndexes.Disk);
                     ListView.Items.Add(ItemList);//添加进来
                 }
                 curPathText.Text = "";
@@ -356,42 +366,48 @@ namespace MyWindowsExplorer
                 backUpPathButton.Enabled = false;
             }
         }
-
-        Dictionary<string, int> extIcon = new Dictionary<string, int>();
-        int i = 0;
         //根据扩展名获取图标 
         public int fileExtIcon(string typeExt, FileInfo f)
         {
-            if (!extIcon.ContainsKey(typeExt) && typeExt != ".exe")
+            try
             {
-                RegistryKey regRead = Registry.ClassesRoot.OpenSubKey(typeExt);
-                if (regRead == null) { return 0; }
-                string subKey = regRead.GetValue("").ToString();
-                RegistryKey regRead1 = Registry.ClassesRoot.OpenSubKey(subKey);
-                if (regRead1 == null) { return 0; }
-                RegistryKey subKey1 = regRead1.OpenSubKey("DefaultIcon");
-                string defaultIcon = subKey1.GetValue("").ToString();
-                string[] defIcon = defaultIcon.Split(',');
-                Icon ic = getExtractIcon(defIcon[0], int.Parse(defIcon[1]));
-                imageList.Images.Add(ic);
-                extIcon.Add(typeExt, i++);
-                return 0;
-            }
-            else if (typeExt == ".exe")
-            {
-                string fullPath = f.FullName;
-                Icon ic = getExtractIcon(fullPath, 0);
-                if (ic != null)
+                if (!extIcon.ContainsKey(typeExt) && typeExt != ".exe")
                 {
+                    RegistryKey regRead = Registry.ClassesRoot.OpenSubKey(typeExt);
+                    if (regRead == null) { return 0; }
+                    string subKey = regRead.GetValue("").ToString();
+                    RegistryKey regRead1 = Registry.ClassesRoot.OpenSubKey(subKey);
+                    if (regRead1 == null) { return 0; }
+                    RegistryKey subKey1 = regRead1.OpenSubKey("DefaultIcon");
+                    string defaultIcon = subKey1.GetValue("").ToString();
+                    string[] defIcon = defaultIcon.Split(',');
+                    Icon ic = getExtractIcon(defIcon[0], int.Parse(defIcon[1]));
                     imageList.Images.Add(ic);
                     extIcon.Add(typeExt, i++);
+                    return 0;
                 }
+                else if (typeExt == ".exe")
+                {
+                    string fullPath = f.FullName;
+                    Icon ic = getExtractIcon(fullPath, 0);
+                    if (ic != null)
+                    {
+                        imageList.Images.Add(ic);
+                        extIcon.Add(typeExt, i++);
+                    }
+                }
+
+            }
+            catch
+            {
+                //MessageBox.Show(typeExt + "处理异常");
             }
             return 0;
         }
         //获取系统图标 
         [DllImport("shell32.dll")]
         public static extern int ExtractIcon(IntPtr h, string strx, int ii);
+        //获取从系统文件"shell32.dll"中获取图标
         public Icon getExtractIcon(string fileName, int iIndex)
         {
             try
@@ -409,5 +425,34 @@ namespace MyWindowsExplorer
             }
             return null;
         }
+        //获取图标的下标
+        private int getImgIndex(string FileName)
+        {
+            int index = 0;
+            FileInfo fileInfo = new FileInfo(FileName);
+            //扩展名不为空
+            if (!fileInfo.Extension.Equals(""))
+            {
+                //根据扩展名获取图标
+                fileExtIcon(fileInfo.Extension, fileInfo);
+                if (extIcon.ContainsKey(fileInfo.Extension))
+                {
+                    //如果extIcon集合中存在相应扩展名图标的下标，则取得该下标
+                    index = extIcon[fileInfo.Extension];
+                }
+                else
+                {
+                    //如果不存在，则取默认的文件图标下标
+                    index = IconIndexes.File;
+                }
+            }
+            else
+            {
+                //如果后缀名为空，则取默认的文件图标下标
+                index = IconIndexes.File;
+            }
+            return index;
+        }
+
     }
 }
