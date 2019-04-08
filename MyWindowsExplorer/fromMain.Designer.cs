@@ -34,7 +34,6 @@
             this.TreeView = new System.Windows.Forms.TreeView();
             this.imageList = new System.Windows.Forms.ImageList(this.components);
             this.panelRight = new System.Windows.Forms.Panel();
-            this.ListView = new System.Windows.Forms.ListView();
             this.head = new System.Windows.Forms.Panel();
             this.panel5 = new System.Windows.Forms.Panel();
             this.curPathText = new System.Windows.Forms.TextBox();
@@ -50,6 +49,7 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.Body = new System.Windows.Forms.Panel();
             this.foot = new System.Windows.Forms.Panel();
+            this.ListView = new System.Windows.Forms.ListView();
             this.panelLeft.SuspendLayout();
             this.panelRight.SuspendLayout();
             this.head.SuspendLayout();
@@ -63,11 +63,12 @@
             // 
             // panelLeft
             // 
+            this.panelLeft.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelLeft.Controls.Add(this.TreeView);
             this.panelLeft.Dock = System.Windows.Forms.DockStyle.Left;
             this.panelLeft.Location = new System.Drawing.Point(0, 0);
             this.panelLeft.Name = "panelLeft";
-            this.panelLeft.Size = new System.Drawing.Size(188, 378);
+            this.panelLeft.Size = new System.Drawing.Size(203, 378);
             this.panelLeft.TabIndex = 0;
             // 
             // TreeView
@@ -79,7 +80,7 @@
             this.TreeView.MinimumSize = new System.Drawing.Size(200, 200);
             this.TreeView.Name = "TreeView";
             this.TreeView.SelectedImageIndex = 0;
-            this.TreeView.Size = new System.Drawing.Size(200, 378);
+            this.TreeView.Size = new System.Drawing.Size(203, 378);
             this.TreeView.TabIndex = 2;
             this.TreeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewFile_AfterSelect);
             // 
@@ -94,27 +95,13 @@
             // 
             // panelRight
             // 
+            this.panelRight.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.panelRight.Controls.Add(this.ListView);
             this.panelRight.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelRight.Location = new System.Drawing.Point(188, 0);
+            this.panelRight.Location = new System.Drawing.Point(203, 0);
             this.panelRight.Name = "panelRight";
-            this.panelRight.Size = new System.Drawing.Size(612, 378);
+            this.panelRight.Size = new System.Drawing.Size(597, 378);
             this.panelRight.TabIndex = 1;
-            // 
-            // ListView
-            // 
-            this.ListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
-            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.ListView.LargeImageList = this.imageList;
-            this.ListView.Location = new System.Drawing.Point(0, 0);
-            this.ListView.MinimumSize = new System.Drawing.Size(300, 300);
-            this.ListView.Name = "ListView";
-            this.ListView.Size = new System.Drawing.Size(612, 378);
-            this.ListView.SmallImageList = this.imageList;
-            this.ListView.StateImageList = this.imageList;
-            this.ListView.TabIndex = 0;
-            this.ListView.UseCompatibleStateImageBehavior = false;
-            this.ListView.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
             // 
             // head
             // 
@@ -256,6 +243,21 @@
             this.foot.Size = new System.Drawing.Size(800, 27);
             this.foot.TabIndex = 4;
             // 
+            // ListView
+            // 
+            this.ListView.Activation = System.Windows.Forms.ItemActivation.OneClick;
+            this.ListView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.ListView.LargeImageList = this.imageList;
+            this.ListView.Location = new System.Drawing.Point(0, 0);
+            this.ListView.MinimumSize = new System.Drawing.Size(300, 300);
+            this.ListView.Name = "ListView";
+            this.ListView.Size = new System.Drawing.Size(597, 378);
+            this.ListView.SmallImageList = this.imageList;
+            this.ListView.StateImageList = this.imageList;
+            this.ListView.TabIndex = 0;
+            this.ListView.UseCompatibleStateImageBehavior = false;
+            this.ListView.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
+            // 
             // fromMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -303,9 +305,9 @@
         private System.Windows.Forms.ToolStripMenuItem 其他ToolStripMenuItem;
         private System.Windows.Forms.ToolStripButton backUpPathButton;
         private System.Windows.Forms.TextBox curPathText;
-        private System.Windows.Forms.ListView ListView;
         private System.Windows.Forms.Panel Body;
         private System.Windows.Forms.ImageList imageList;
+        private System.Windows.Forms.ListView ListView;
     }
 }
 
