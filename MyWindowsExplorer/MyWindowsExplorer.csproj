@@ -46,15 +46,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="fromMain.cs">
+    <Compile Include="UserInterface\fromMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="fromMain.Designer.cs">
+    <Compile Include="UserInterface\fromMain.Designer.cs">
       <DependentUpon>fromMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="fromMain.resx">
+    <Compile Include="UserInterface\ImgListIndexs.cs" />
+    <EmbeddedResource Include="UserInterface\fromMain.resx">
       <DependentUpon>fromMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -78,6 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="BusinessLogicLayer\" />
+    <Folder Include="DataAccessLayer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
