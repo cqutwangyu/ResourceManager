@@ -24,24 +24,28 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         List<string> pathList = new List<string>();
         private string simpleFileName=null;
         public string curPath=null;
+        private string temp=null;
         private int pathIndex=-1;
         private int pathSize=0;
-        private bool addPath=true;
+        public bool addPath=false;
+        private string rootName = "此电脑";
         //图标
         Dictionary<string, int> extIcon = new Dictionary<string, int>();
         int startIndex;
         int fileImgIndex;
         private IntPtr handle;
-        private ImageList imageList;
+        private ImageList largeIconImageList;
+        private ImageList smallImageList;
 
 
-        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,ImageList imageList, TextBox curPathText, ToolStripButton leftPathButton, ToolStripButton rightPathButton, ToolStripButton backUpPathButton)
+        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,ImageList largeIconImageList, ImageList smallImageList, TextBox curPathText, ToolStripButton leftPathButton, ToolStripButton rightPathButton, ToolStripButton backUpPathButton)
         {   this.listView = listView;
             this.treeView = treeView;
             this.handle=handle;
-            this.imageList = imageList;
+            this.largeIconImageList = largeIconImageList;
+            this.smallImageList = smallImageList;
             this.curPathText = curPathText;
-            this.startIndex = imageList.Images.Count;
+            this.startIndex = largeIconImageList.Images.Count;
             this.leftPathButton= leftPathButton;
             this.rightPathButton= rightPathButton;
             this.backUpPathButton= backUpPathButton;
@@ -51,7 +55,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         public void fromMainInit()
         {
             //创建根节点
-            TreeNode headNode = new TreeNode("我的电脑", ImgListIndexs.MyComputer, ImgListIndexs.MyComputer);
+            TreeNode headNode = new TreeNode(rootName, ImgListIndexs.MyComputer, ImgListIndexs.MyComputer);
             //添加根节点
             treeView.Nodes.Add(headNode);
             //显示ListView
@@ -60,81 +64,87 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             TreeViewShow(headNode);
             //TreeView根节点展开
             treeView.Nodes[0].Expand();
-            //列表形式显示
+        }
+
+        //大图标显示
+        public void LargeIconShow()
+        {
+            listView.View = View.LargeIcon;
+        }
+
+        //小图标显示
+        public void SmallIconShow()
+        {
+            listView.View = View.SmallIcon;
+        }
+
+        //详细信息列表显示
+        public void DetailsShow()
+        {
+            listView.View = View.Details;
+        }
+
+        //列表显示
+        public void ListShow()
+        {
             listView.View = View.List;
         }
 
         //回到上一级
-        internal void backUpPath()
+        public void backUpPath()
         {
-            //去除\
-            string temp = curPath.Replace("\\", "");
-            if (curPath.Length - temp.Length > 1)
+            addPath = false;
+            DirectoryInfo directoryInfo = new DirectoryInfo(curPath);
+            if (directoryInfo.Parent != null)
             {
-                addPath = false;
-                string path = curPath.Substring(0, curPath.LastIndexOf("\\"));
-                ListViewShow(path.Substring(0, path.LastIndexOf("\\") + 1));
+                string parentPath = directoryInfo.Parent.FullName.Replace(rootName, "");
+                ListViewShow(parentPath);
             }
             else
             {
-                listView.Clear();
-                //回退路径时不添加路径
-                addPath = false;
-                curPath = null;
-                pathIndex = -1;
-                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
-                {
-                    ListViewItem ItemList = new ListViewItem(DrvName, ImgListIndexs.Disk);
-                    listView.Items.Add(ItemList);//添加进来
-                }
-                curPathText.Text = "";
-                //updatePathButtonState();
+                listViewShowDrv();
             }
+            updatePathButtonState();
         }
 
         //右回退路径
-        internal void rightReturnPath()
+        public void rightReturnPath()
         {
+            addPath = false;
             //上一级目录
             if (pathIndex != pathSize)
             {
+                listView.Items.Clear();
                 if (pathIndex + 1 < pathSize)
                 {
-                    //回退路径时不添加路径
-                    addPath = false;
-                    listView.Clear();
                     pathIndex++;
                     string path = pathList[pathIndex];
                     ListViewShow(path);
                 }
                 else if (pathIndex == 0)
                 {
-                    addPath = false;
-                    listView.Clear();
                     string path = pathList[pathIndex];
                     pathIndex++;
                     ListViewShow(path);
                 }
             }
+            updatePathButtonState();
         }
 
         //左回退路径
-        internal void leftReturnPath()
+        public void leftReturnPath()
         {
-            listView.Clear();
+            addPath = false;
+            listView.Items.Clear();
             pathIndex -= 1;
             //上一级目录
             if (pathIndex >= 0)
             {
                 string path = pathList[pathIndex];
-                //回退路径时不添加路径
-                addPath = false;
                 ListViewShow(path);
             }
             else
             {
-                //回退路径时不添加路径
-                addPath = false;
                 curPath = null;
                 pathIndex = -1;
                 foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
@@ -143,190 +153,237 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                     listView.Items.Add(ItemList);//添加进来
                 }
                 curPathText.Text = "";
-                //updatePathButtonState();
             }
+            updatePathButtonState();
         }
 
         //显示被点击树节点的子节点
-        public void TreeViewShow(TreeNode NodeDir)//初始化TreeView控件
+        public void TreeViewShow(TreeNode nodeDir)//初始化TreeView控件
         {
-            if (NodeDir.Nodes.Count == 0)
-            {
-                if (NodeDir.Parent == null)//如果结点为空显示硬盘分区
+            if (nodeDir.Nodes.Count == 0)
+            {   
+                //如果父节点为空显示硬盘分区
+                if (nodeDir.Parent == null)
                 {
-                    foreach (string DrvName in Directory.GetLogicalDrives())
-                    {
-                        simpleFileName = getSimpleFileName(curPath, DrvName);
-                        TreeNode aNode = new TreeNode(simpleFileName, ImgListIndexs.Disk, ImgListIndexs.Disk);
-                        aNode.Tag = DrvName;
-                        NodeDir.Nodes.Add(aNode);
-                    }
-                }// end 
-                else// 不为空，显示分区下文件夹
-                {
-                    try
-                    {
-                        //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
-                        Boolean authority = HasOperationPermission((string)NodeDir.Tag);
-                    }
-                    catch
-                    {
-                        MessageBox.Show("无法访问路径:" + (string)NodeDir.Tag);
-                        return;
-                    }
-                    curPath = (string)NodeDir.Tag;
-                    //curPathText.Text = curPath;
-                    foreach (string DirName in Directory.GetDirectories((string)NodeDir.Tag))
-                    {
-                        simpleFileName = getSimpleFileName(curPath, DirName);
-                        TreeNode aNode = new TreeNode(simpleFileName, ImgListIndexs.Folder, ImgListIndexs.Folder);
-                        aNode.Tag = DirName;
-                        NodeDir.Nodes.Add(aNode);
-                    }
-                }
-            }
-        }
-
-        //传入被点击的树节点，列表显示文件
-        public void ListViewShow(TreeNode NodeDir)
-        {
-            listView.Clear();
-            if (NodeDir.Parent == null)// 如果当前TreeView的父结点为空，就把我的电脑下的分区名称添加进来
-            {
-                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
-                {
-                    ListViewItem ItemList = new ListViewItem(DrvName, ImgListIndexs.Disk);
-                    listView.Items.Add(ItemList);//添加进来
-                }
-            }
-            //如果DirFileName是文件夹
-            else if (Directory.Exists((string)NodeDir.Tag))//如果当前TreeView的父结点不为空，把点击的结点，做为一个目录文件的总结点
-            {
-                try
-                {
-                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
-                    Boolean authority = HasOperationPermission((string)NodeDir.Tag);
-                }
-                catch
-                {
-                    MessageBox.Show("无法访问路径:" + (string)NodeDir.Tag);
-                    return;
-                }
-                curPath = (string)NodeDir.Tag;
-                //curPathText.Text = curPath;
-                pathSize++;
-                pathIndex++;
-                pathList.Insert(pathIndex, curPath);
-                foreach (string DirName in Directory.GetDirectories(curPath))//编历当前分区或文件夹所有目录
-                {
-                    simpleFileName = getSimpleFileName(curPath, DirName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, ImgListIndexs.Folder);
-                    listView.Items.Add(ItemList);
-                }
-                foreach (string FileName in Directory.GetFiles(curPath))//编历当前分区或文件夹所有目录的文件
-                {
-                    fileImgIndex = getImgIndex(FileName);
-                    simpleFileName = getSimpleFileName(curPath, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, fileImgIndex);
-                    listView.Items.Add(ItemList);
-                }
-            }
-        }
-
-        //传入路径名，列表显示文件
-        public void ListViewShow(string DirFileName)
-        {
-            try
-            {
-                //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
-                Boolean authority = HasOperationPermission(DirFileName);
-            }
-            catch
-            {
-                MessageBox.Show("无法访问路径:" + DirFileName);
-                return;
-            }
-            //如果DirFileName是文件夹
-            if (Directory.Exists(DirFileName))
-            {
-                curPath = DirFileName;
-                curPathText.Text = curPath;
-                if (addPath)
-                {
-                    pathSize++;
-                    pathIndex++;
-                    pathList.Insert(pathIndex, curPath);
+                    treeViewShowDrv(nodeDir);
                 }
                 else
                 {
-                    addPath = true;
-                }
-                listView.Clear();
-                foreach (string DirName in Directory.GetDirectories(DirFileName))
-                {
-                    simpleFileName = getSimpleFileName(DirFileName, DirName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, ImgListIndexs.Folder);
-                    listView.Items.Add(ItemList);
-                }
-                foreach (string FileName in Directory.GetFiles(DirFileName))
-                {
-                    fileImgIndex = getImgIndex(FileName);
-                    simpleFileName = getSimpleFileName(DirFileName, FileName);
-                    ListViewItem ItemList = new ListViewItem(simpleFileName, fileImgIndex);
-                    listView.Items.Add(ItemList);
+                    // 不为空，显示分区下文件夹
+                    string nodePath = nodeDir.FullPath.Replace(rootName + "\\", "");
+                    curPath = nodePath;
+                    curPathText.Text = nodePath;
+                    treeViewShowFolderOneTier(nodeDir);
                 }
             }
+        }
+
+        //树节点显示path下的文件夹
+        public void ListViewShow(TreeNode nodeDir)
+        {
+            listView.BeginUpdate();
+            string nodePath = nodeDir.FullPath.Replace(rootName + "\\", "");
+            if (nodeDir.Parent == null)// 如果当前TreeView的父结点为空，就把我的电脑下的分区名称添加进来
+            {
+                listViewShowDrv();
+            }
+            //如果DirFileName是文件夹
+            else if (Directory.Exists(nodePath))
+            {
+
+                //try catch 判断是否可访问
+                try
+                {
+                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
+                    Directory.GetDirectories(nodePath);
+                }
+                catch
+                {
+                    MessageBox.Show("无法访问路径:" + nodePath);
+                    return;
+                }
+                updatePath(nodePath);
+                //更新路径
+                pathList.Insert(pathIndex, curPath);
+                //显示
+                listViewShowFolderItems(curPath);
+                listViewShowFileItems(curPath);
+            }
+            listView.EndUpdate();
+        }
+
+        //传入路径名，列表显示文件
+        public void ListViewShow(string path)
+        {
+            //如果path是文件夹
+            if (Directory.Exists(path))
+            {
+                //try catch 判断是否可访问
+                try
+                {
+                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
+                    Directory.GetDirectories(path);
+                }
+                catch
+                {
+                    MessageBox.Show("无法访问路径:" + path);
+                    return;
+                }
+                //更新路径
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                string nodePath = directoryInfo.FullName.Replace(rootName + "\\", "");
+                updatePath(nodePath);
+                //显示
+                listViewShowPath(path);
+            }
             //否则如果被打开的是文件
-            else if (File.Exists(DirFileName))
+            else if (File.Exists(path))
             {
                 //启动该文件
                 try
                 {
-                    System.Diagnostics.Process.Start(DirFileName);
+                    System.Diagnostics.Process.Start(path);
                 }
                 catch
                 {
-                    MessageBox.Show("无法打开文件："+ DirFileName);
+                    MessageBox.Show("无法打开文件："+ path);
                 }
             }
         }
 
-        //去除多余的路径名，将最后的文件名保存到FileNameTemp
-        private string getSimpleFileName(string parentPath, string fileName)
+        //树节点显示驱动器(磁盘)
+        private void treeViewShowDrv(TreeNode NodeDir)
         {
-            //假设curPath="C:\"
-            curPath = parentPath;
-            //如果父路径不为空
-            if (parentPath != null)
+            foreach (string drvName in Directory.GetLogicalDrives())
             {
-                //如果最后一个字符不为\，如G:\Maven
-                if (curPath.LastIndexOf("\\") != curPath.Length - 1)
+                DirectoryInfo directoryInfo = new DirectoryInfo(drvName);
+                TreeNode itemNode = new TreeNode(directoryInfo.Name, ImgListIndexs.Disk, ImgListIndexs.Disk);
+                NodeDir.Nodes.Add(itemNode);
+                treeViewShowFolderOneTier(itemNode);
+            }
+        }
+
+        //显示树节点下的文件夹，tier代表递归次数，用于显示子目录的加号
+        private void treeViewShowFolderOneTier(TreeNode NodeDir)
+        {
+            //当前节点的子节点个数为0
+            if (NodeDir.Nodes.Count == 0)
+            {
+                string nodeName = (string)NodeDir.Tag;
+                string nodePath = NodeDir.FullPath.Replace(rootName + "\\", "");
+                string[] arrs;
+
+                //try catch 判断是否可访问
+                try
                 {
-                    //在最后加上\，如G:\Maven\
-                    curPath += "\\";
+                    //判断是否有访问权限，如果无法访问，执行catch块程序，直接return
+                    arrs = Directory.GetDirectories(nodePath);
                 }
-                //去除父路径
-                simpleFileName = fileName.Replace(parentPath, "");
+                catch
+                {
+                    return;
+                }
+                //遍历
+                foreach (string itemName in arrs)
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(itemName);
+                    TreeNode itemNode = new TreeNode(directoryInfo.Name, ImgListIndexs.Folder, ImgListIndexs.Folder);
+                    NodeDir.Nodes.Add(itemNode);
+                }
             }
-            else
-            {
-                //否则直接赋值
-                simpleFileName = fileName;
-            }
-            //去除:和\并返回
-            return simpleFileName.Replace(":", "").Replace("\\", "");
         }
 
-        // 检查当前用户是否拥有此文件夹的操作权限
-        public static bool HasOperationPermission(string folder)
+        //加载第二层节点
+        public void treeViewShowFolderTwoTier(TreeNode NodeDir)
         {
-            var currentUserIdentity = Path.Combine(Environment.UserDomainName, Environment.UserName);
+            //遍历当前节点的子节点
+            TreeNode treeNode = NodeDir.Nodes[0];
+            while (treeNode != null)
+            {
+                //加载子节点的子节点
+                treeViewShowFolderOneTier(treeNode);
+                treeNode = treeNode.NextNode;
+            }
+        }
 
-            //获取访问控制列表，如果无法访问，会在这里抛出异常
-            DirectorySecurity fileAcl = Directory.GetAccessControl(folder);
-            var userAccessRules = fileAcl.GetAccessRules(true, true, typeof(System.Security.Principal.NTAccount)).OfType<FileSystemAccessRule>().Where(i => i.IdentityReference.Value == currentUserIdentity).ToList();
+        //列表显示路径下的目录和文件
+        private void listViewShowPath(string path)
+        {
+            listView.BeginUpdate();
+            listView.Items.Clear();
+            listViewShowFolderItems(curPath);
+            listViewShowFileItems(curPath);
+            listView.EndUpdate();
+        }
 
-            return userAccessRules.Any(i => i.AccessControlType == AccessControlType.Deny);
+        //列表显示文件夹下的子目录
+        private void listViewShowFolderItems(string curPath)
+        {
+            //编历当前分区或文件夹所有目录
+            foreach (string dirName in Directory.GetDirectories(curPath))
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(dirName);
+                ListViewItem listItem = new ListViewItem(directoryInfo.Name, ImgListIndexs.Folder);
+                listItem.Text = directoryInfo.Name;
+                listItem.SubItems.Add(directoryInfo.LastWriteTime.ToString());
+                listItem.SubItems.Add("文件夹");
+                listView.Items.Add(listItem);
+            }
+        }
+
+        //列表显示文件夹下的文件
+        private void listViewShowFileItems(string curPath)
+        {
+            //编历当前分区或文件夹所有文件
+            foreach (string fileName in Directory.GetFiles(curPath))
+            {
+                fileImgIndex = getImgIndex(fileName);
+                FileInfo fileInfo = new FileInfo(fileName);
+                ListViewItem listItem = new ListViewItem(fileInfo.Name, fileImgIndex);
+                listItem.Text = fileInfo.Name;
+                listItem.SubItems.Add(fileInfo.LastWriteTime.ToString());
+                listItem.SubItems.Add(fileInfo.Extension);
+                listItem.SubItems.Add(fileInfo.Length.ToString() + "KB");
+                listView.Items.Add(listItem);
+            }
+        }
+
+        //显示驱动器（磁盘）
+        private void listViewShowDrv()
+        {
+            listView.BeginUpdate();
+            listView.Items.Clear();
+            curPath = null;
+            foreach (string drvName in Directory.GetLogicalDrives())//获得硬盘分区名
+            {
+                ListViewItem listItem = new ListViewItem(drvName, ImgListIndexs.Disk);
+                DirectoryInfo directoryInfo = new DirectoryInfo(drvName);
+                listItem.Text = drvName;
+                listItem.SubItems.Add(directoryInfo.LastWriteTime.ToString());
+                listItem.SubItems.Add("文件夹");
+                listView.Items.Add(listItem);//添加进来
+            }
+            listView.EndUpdate();
+        }
+
+        //更新路径
+        private void updatePath(string newPath)
+        {
+            //如果结尾没有“\”则补上
+            if(!newPath.EndsWith("\\"))
+            {
+                newPath += "\\";
+            }
+            curPath = newPath;
+            curPathText.Text = curPath;
+            //是否保存路径
+            if (addPath)
+            {
+                pathSize++;
+                pathIndex++;
+                pathList.Insert(pathIndex, curPath);
+            }
+            updatePathButtonState();
         }
 
         //更新路径按钮状态
@@ -386,7 +443,8 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                     string defaultIcon = subKey1.GetValue("").ToString();
                     string[] defIcon = defaultIcon.Split(',');
                     Icon ic = getExtractIcon(defIcon[0], int.Parse(defIcon[1]));
-                    imageList.Images.Add(ic);
+                    largeIconImageList.Images.Add(ic);
+                    smallImageList.Images.Add(ic);
                     extIcon.Add(typeExt, startIndex++);
                     return 0;
                 }
@@ -396,7 +454,8 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                     Icon ic = getExtractIcon(fullPath, 0);
                     if (ic != null)
                     {
-                        imageList.Images.Add(ic);
+                        largeIconImageList.Images.Add(ic);
+                        smallImageList.Images.Add(ic);
                         extIcon.Add(typeExt, startIndex++);
                     }
                 }
