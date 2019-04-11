@@ -46,17 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UserInterface\fromMain.cs">
+    <Compile Include="BusinessLogicLayer\FromMainBLL.cs" />
+    <Compile Include="UserInterface\FromMain.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UserInterface\fromMain.Designer.cs">
-      <DependentUpon>fromMain.cs</DependentUpon>
+    <Compile Include="UserInterface\FromMain.Designer.cs">
+      <DependentUpon>FromMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserInterface\ImgListIndexs.cs" />
-    <EmbeddedResource Include="UserInterface\fromMain.resx">
-      <DependentUpon>fromMain.cs</DependentUpon>
+    <Compile Include="BusinessLogicLayer\ImgListIndexs.cs" />
+    <EmbeddedResource Include="UserInterface\FromMain.resx">
+      <DependentUpon>FromMain.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -81,7 +82,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BusinessLogicLayer\" />
     <Folder Include="DataAccessLayer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
