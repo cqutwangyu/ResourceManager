@@ -17,12 +17,15 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         private TreeView treeView;
         private ListView listView;
         private TextBox curPathText;
+        private ToolStripButton leftPathButton;
+        private ToolStripButton rightPathButton;
+        private ToolStripButton backUpPathButton;
         //路径
         List<string> pathList = new List<string>();
-        private string simpleFileName;
-        private string curPath;
-        private int pathIndex;
-        private int pathSize;
+        private string simpleFileName=null;
+        public string curPath=null;
+        private int pathIndex=-1;
+        private int pathSize=0;
         private bool addPath=true;
         //图标
         Dictionary<string, int> extIcon = new Dictionary<string, int>();
@@ -31,16 +34,18 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         private IntPtr handle;
         private ImageList imageList;
 
-        public string CurPath { get => curPath; set => curPath = value; }
 
-        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,ImageList imageList, TextBox curPathText)
-        {            this.listView = listView;
+        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,ImageList imageList, TextBox curPathText, ToolStripButton leftPathButton, ToolStripButton rightPathButton, ToolStripButton backUpPathButton)
+        {   this.listView = listView;
             this.treeView = treeView;
             this.handle=handle;
             this.imageList = imageList;
             this.curPathText = curPathText;
             this.startIndex = imageList.Images.Count;
-        }
+            this.leftPathButton= leftPathButton;
+            this.rightPathButton= rightPathButton;
+            this.backUpPathButton= backUpPathButton;
+         }
 
         //窗口初始化
         public void fromMainInit()
@@ -241,21 +246,21 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 MessageBox.Show("无法访问路径:" + DirFileName);
                 return;
             }
-            curPath = DirFileName;
-            curPathText.Text = curPath;
-            if (addPath)
-            {
-                pathSize++;
-                pathIndex++;
-                pathList.Insert(pathIndex, curPath);
-            }
-            else
-            {
-                addPath = true;
-            }
             //如果DirFileName是文件夹
             if (Directory.Exists(DirFileName))
             {
+                curPath = DirFileName;
+                curPathText.Text = curPath;
+                if (addPath)
+                {
+                    pathSize++;
+                    pathIndex++;
+                    pathList.Insert(pathIndex, curPath);
+                }
+                else
+                {
+                    addPath = true;
+                }
                 listView.Clear();
                 foreach (string DirName in Directory.GetDirectories(DirFileName))
                 {
@@ -275,7 +280,14 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             else if (File.Exists(DirFileName))
             {
                 //启动该文件
-                System.Diagnostics.Process.Start(DirFileName);
+                try
+                {
+                    System.Diagnostics.Process.Start(DirFileName);
+                }
+                catch
+                {
+                    MessageBox.Show("无法打开文件："+ DirFileName);
+                }
             }
         }
 
@@ -318,7 +330,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         }
 
         //更新路径按钮状态
-        public void updatePathButtonState(ToolStripButton leftPathButton, ToolStripButton rightPathButton,ToolStripButton backUpPathButton)
+        public void updatePathButtonState()
 
         {
             //左箭头按钮
