@@ -20,6 +20,8 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         private ToolStripButton leftPathButton;
         private ToolStripButton rightPathButton;
         private ToolStripButton backUpPathButton;
+        private CheckBox fileCheckBox;
+        private CheckBox folderCheckBox;
         //路径
         List<string> pathList = new List<string>();
         private string simpleFileName=null;
@@ -38,7 +40,10 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         private ImageList smallImageList;
 
 
-        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,ImageList largeIconImageList, ImageList smallImageList, TextBox curPathText, ToolStripButton leftPathButton, ToolStripButton rightPathButton, ToolStripButton backUpPathButton)
+        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,
+            ImageList largeIconImageList, ImageList smallImageList, TextBox curPathText,
+            ToolStripButton leftPathButton, ToolStripButton rightPathButton,
+            ToolStripButton backUpPathButton,CheckBox fileCheckBox, CheckBox folderCheckBox)
         {   this.listView = listView;
             this.treeView = treeView;
             this.handle=handle;
@@ -49,6 +54,8 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             this.leftPathButton= leftPathButton;
             this.rightPathButton= rightPathButton;
             this.backUpPathButton= backUpPathButton;
+            this.fileCheckBox=fileCheckBox; 
+            this.folderCheckBox=folderCheckBox;
          }
 
         //窗口初始化
@@ -82,6 +89,15 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         public void DetailsShow()
         {
             listView.View = View.Details;
+        }
+
+        //文件显示过滤
+        public void ShowFilter()
+        {
+            if (curPath != null)
+            {
+                listViewShowPath(curPath);
+            }
         }
 
         //列表显示
@@ -214,10 +230,10 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         //传入路径名，列表显示文件
         public void ListViewShow(string path)
         {
-            path = pathCompletion(path);
             //如果path是文件夹
             if (Directory.Exists(path))
             {
+                path = pathCompletion(path);
                 //try catch 判断是否可访问
                 try
                 {
@@ -311,8 +327,16 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         {
             listView.BeginUpdate();
             listView.Items.Clear();
-            listViewShowFolderItems(curPath);
-            listViewShowFileItems(curPath);
+            //如果显示文件夹为选中状态
+            if (folderCheckBox.Checked)
+            {
+                listViewShowFolderItems(curPath);
+            }
+            //如果显示文件为选中状态
+            if (fileCheckBox.Checked)
+            {
+                listViewShowFileItems(curPath);
+            }
             listView.EndUpdate();
         }
 

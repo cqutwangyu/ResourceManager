@@ -59,6 +59,8 @@ namespace MyWindowsExplorer
             this.length = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.smallImageList = new System.Windows.Forms.ImageList(this.components);
             this.foot = new System.Windows.Forms.Panel();
+            this.fileCheckBox = new System.Windows.Forms.CheckBox();
+            this.folderCheckBox = new System.Windows.Forms.CheckBox();
             this.head.SuspendLayout();
             this.panel5.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -70,6 +72,7 @@ namespace MyWindowsExplorer
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
+            this.foot.SuspendLayout();
             this.SuspendLayout();
             // 
             // treeView
@@ -326,11 +329,42 @@ namespace MyWindowsExplorer
             // 
             // foot
             // 
-            this.foot.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.foot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.foot.Controls.Add(this.folderCheckBox);
+            this.foot.Controls.Add(this.fileCheckBox);
             this.foot.Location = new System.Drawing.Point(0, 508);
             this.foot.Name = "foot";
             this.foot.Size = new System.Drawing.Size(1066, 27);
             this.foot.TabIndex = 4;
+            // 
+            // fileCheckBox
+            // 
+            this.fileCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.fileCheckBox.AutoSize = true;
+            this.fileCheckBox.Checked = true;
+            this.fileCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.fileCheckBox.Location = new System.Drawing.Point(965, 5);
+            this.fileCheckBox.Name = "fileCheckBox";
+            this.fileCheckBox.Size = new System.Drawing.Size(89, 19);
+            this.fileCheckBox.TabIndex = 0;
+            this.fileCheckBox.Text = "显示文件";
+            this.fileCheckBox.UseVisualStyleBackColor = true;
+            this.fileCheckBox.CheckedChanged += new System.EventHandler(this.fileCheckBox_CheckedChanged);
+            // 
+            // folderCheckBox
+            // 
+            this.folderCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderCheckBox.AutoSize = true;
+            this.folderCheckBox.Checked = true;
+            this.folderCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.folderCheckBox.Location = new System.Drawing.Point(855, 5);
+            this.folderCheckBox.Name = "folderCheckBox";
+            this.folderCheckBox.Size = new System.Drawing.Size(104, 19);
+            this.folderCheckBox.TabIndex = 1;
+            this.folderCheckBox.Text = "显示文件夹";
+            this.folderCheckBox.UseVisualStyleBackColor = true;
+            this.folderCheckBox.CheckedChanged += new System.EventHandler(this.folderCheckBox_CheckedChanged);
             // 
             // FromMain
             // 
@@ -358,6 +392,8 @@ namespace MyWindowsExplorer
             this.splitContainer.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer)).EndInit();
             this.splitContainer.ResumeLayout(false);
+            this.foot.ResumeLayout(false);
+            this.foot.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -390,6 +426,8 @@ namespace MyWindowsExplorer
         private ColumnHeader type;
         private ColumnHeader length;
         private ImageList smallImageList;
+        private CheckBox folderCheckBox;
+        private CheckBox fileCheckBox;
     }
 }
 

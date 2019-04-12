@@ -17,7 +17,9 @@ namespace MyWindowsExplorer
         //窗口加载事件
         private void fromMain_Load(object sender, EventArgs e)
         {
-            bll = new FromMainBLL(treeView,listView, this.Handle, largeIconImageList,smallImageList,curPathText,  leftPathButton,  rightPathButton,  backUpPathButton);
+            bll = new FromMainBLL(treeView,listView, this.Handle, largeIconImageList,
+                smallImageList,curPathText,  leftPathButton,  
+                rightPathButton,  backUpPathButton,fileCheckBox,folderCheckBox);
             bll.fromMainInit();
         }
         //树节点点击事件
@@ -90,6 +92,16 @@ namespace MyWindowsExplorer
         private void 列表ToolStripMenuItem_Click(object sender, EventArgs e)
         {
             bll.ListShow();
+        }
+
+        private void folderCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            bll.ShowFilter();
+        }
+
+        private void fileCheckBox_CheckedChanged(object sender, EventArgs e)
+        {
+            bll.ShowFilter();
         }
     }
 }
