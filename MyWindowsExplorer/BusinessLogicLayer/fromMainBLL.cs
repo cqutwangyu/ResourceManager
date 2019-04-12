@@ -206,8 +206,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 //更新路径
                 pathList.Insert(pathIndex, curPath);
                 //显示
-                listViewShowFolderItems(curPath);
-                listViewShowFileItems(curPath);
+                listViewShowPath(nodePath);
             }
             listView.EndUpdate();
         }
@@ -215,6 +214,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         //传入路径名，列表显示文件
         public void ListViewShow(string path)
         {
+            path = pathCompletion(path);
             //如果path是文件夹
             if (Directory.Exists(path))
             {
@@ -343,7 +343,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 listItem.Text = fileInfo.Name;
                 listItem.SubItems.Add(fileInfo.LastWriteTime.ToString());
                 listItem.SubItems.Add(fileInfo.Extension);
-                listItem.SubItems.Add(fileInfo.Length.ToString() + "KB");
+                listItem.SubItems.Add(formattingKB(fileInfo.Length));
                 listView.Items.Add(listItem);
             }
         }
@@ -366,15 +366,35 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             listView.EndUpdate();
         }
 
+        //单位转换，传入字节B转为KB...GB...EB
+        private string formattingKB(long length)
+        {
+            //所有单位集合
+            string[] units = { " B", " KB", " MB", " GB", " TB", " PB", " EB" };
+            //进制
+            long kb = 1024;
+            //单位等级
+            int level = 0;
+            long num = length;
+            while (num > 1024)
+            {
+                num = num / 1024;
+                level++;
+            }
+            //取出单位
+            string unit = units[level];
+            //算出值，Pow得到kb的level次幂
+            double value = length / Math.Pow(kb, level);
+            //取小数点后两位，四舍五入
+            value = Math.Round(value, 2);
+            //返回值+单位
+            return value + unit;
+        }
+
         //更新路径
         private void updatePath(string newPath)
         {
-            //如果结尾没有“\”则补上
-            if(!newPath.EndsWith("\\"))
-            {
-                newPath += "\\";
-            }
-            curPath = newPath;
+            curPath = pathCompletion(newPath);
             curPathText.Text = curPath;
             //是否保存路径
             if (addPath)
@@ -384,6 +404,18 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 pathList.Insert(pathIndex, curPath);
             }
             updatePathButtonState();
+        }
+        
+        //为结尾没有“\”的路径补上“\”
+        private static string pathCompletion(string newPath)
+        {
+            //如果结尾没有“\”则补上
+            if (!newPath.EndsWith("\\"))
+            {
+                newPath += "\\";
+            }
+
+            return newPath;
         }
 
         //更新路径按钮状态
