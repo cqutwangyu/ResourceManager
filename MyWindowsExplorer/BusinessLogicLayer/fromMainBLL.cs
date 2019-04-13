@@ -22,6 +22,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         private ToolStripButton backUpPathButton;
         private CheckBox fileCheckBox;
         private CheckBox folderCheckBox;
+        private Label fileCountText;
         //路径
         List<string> pathList = new List<string>();
         private string simpleFileName=null;
@@ -43,7 +44,8 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,
             ImageList largeIconImageList, ImageList smallImageList, TextBox curPathText,
             ToolStripButton leftPathButton, ToolStripButton rightPathButton,
-            ToolStripButton backUpPathButton,CheckBox fileCheckBox, CheckBox folderCheckBox)
+            ToolStripButton backUpPathButton,CheckBox fileCheckBox, CheckBox folderCheckBox,
+            Label fileCountText)
         {   this.listView = listView;
             this.treeView = treeView;
             this.handle=handle;
@@ -56,6 +58,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             this.backUpPathButton= backUpPathButton;
             this.fileCheckBox=fileCheckBox; 
             this.folderCheckBox=folderCheckBox;
+            this.fileCountText = fileCountText;
          }
 
         //窗口初始化
@@ -66,33 +69,33 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             //添加根节点
             treeView.Nodes.Add(headNode);
             //显示ListView
-            ListViewShow(headNode);
+            listViewShow(headNode);
             //显示TreeView
-            TreeViewShow(headNode);
+            treeViewShow(headNode);
             //TreeView根节点展开
             treeView.Nodes[0].Expand();
         }
 
         //大图标显示
-        public void LargeIconShow()
+        public void largeIconShow()
         {
             listView.View = View.LargeIcon;
         }
 
         //小图标显示
-        public void SmallIconShow()
+        public void smallIconShow()
         {
             listView.View = View.SmallIcon;
         }
 
         //详细信息列表显示
-        public void DetailsShow()
+        public void detailsShow()
         {
             listView.View = View.Details;
         }
 
         //文件显示过滤
-        public void ShowFilter()
+        public void showFilter()
         {
             if (curPath != null)
             {
@@ -101,7 +104,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         }
 
         //列表显示
-        public void ListShow()
+        public void listShow()
         {
             listView.View = View.List;
         }
@@ -114,7 +117,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             if (directoryInfo.Parent != null)
             {
                 string parentPath = directoryInfo.Parent.FullName.Replace(rootName, "");
-                ListViewShow(parentPath);
+                listViewShow(parentPath);
             }
             else
             {
@@ -135,13 +138,13 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 {
                     pathIndex++;
                     string path = pathList[pathIndex];
-                    ListViewShow(path);
+                    listViewShow(path);
                 }
                 else if (pathIndex == 0)
                 {
                     string path = pathList[pathIndex];
                     pathIndex++;
-                    ListViewShow(path);
+                    listViewShow(path);
                 }
             }
             updatePathButtonState();
@@ -157,7 +160,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             if (pathIndex >= 0)
             {
                 string path = pathList[pathIndex];
-                ListViewShow(path);
+                listViewShow(path);
             }
             else
             {
@@ -174,7 +177,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         }
 
         //显示被点击树节点的子节点
-        public void TreeViewShow(TreeNode nodeDir)//初始化TreeView控件
+        public void treeViewShow(TreeNode nodeDir)//初始化TreeView控件
         {
             if (nodeDir.Nodes.Count == 0)
             {   
@@ -195,7 +198,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         }
 
         //树节点显示path下的文件夹
-        public void ListViewShow(TreeNode nodeDir)
+        public void listViewShow(TreeNode nodeDir)
         {
             listView.BeginUpdate();
             string nodePath = nodeDir.FullPath.Replace(rootName + "\\", "");
@@ -203,10 +206,14 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             {
                 listViewShowDrv();
             }
-            //如果DirFileName是文件夹
+            //如果是文件夹
             else if (Directory.Exists(nodePath))
             {
-
+                listView.Columns.Clear();
+                listView.Columns.Add("名称", 180);
+                listView.Columns.Add("修改时间", 150);
+                listView.Columns.Add("文件类型", 120);
+                listView.Columns.Add("大小", 120);
                 //try catch 判断是否可访问
                 try
                 {
@@ -228,7 +235,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         }
 
         //传入路径名，列表显示文件
-        public void ListViewShow(string path)
+        public void listViewShow(string path)
         {
             //如果path是文件夹
             if (Directory.Exists(path))
@@ -320,11 +327,17 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 treeViewShowFolderOneTier(treeNode);
                 treeNode = treeNode.NextNode;
             }
+            fileCountText.Text = listView.Items.Count + "个项目";
         }
 
         //列表显示路径下的目录和文件
         private void listViewShowPath(string path)
         {
+            listView.Columns.Clear();
+            listView.Columns.Add("名称", 180);
+            listView.Columns.Add("修改时间", 150);
+            listView.Columns.Add("文件类型", 120);
+            listView.Columns.Add("大小", 120);
             listView.BeginUpdate();
             listView.Items.Clear();
             //如果显示文件夹为选中状态
@@ -337,6 +350,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
             {
                 listViewShowFileItems(curPath);
             }
+            fileCountText.Text = listView.Items.Count+"个项目";
             listView.EndUpdate();
         }
 
@@ -351,6 +365,7 @@ namespace MyWindowsExplorer.BusinessLogicLayer
                 listItem.Text = directoryInfo.Name;
                 listItem.SubItems.Add(directoryInfo.LastWriteTime.ToString());
                 listItem.SubItems.Add("文件夹");
+                listItem.SubItems.Add("");
                 listView.Items.Add(listItem);
             }
         }
@@ -375,16 +390,27 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         //显示驱动器（磁盘）
         private void listViewShowDrv()
         {
+            listView.Columns.Clear();
+            listView.Columns.Add("名称",180);
+            listView.Columns.Add("总空间",100);
+            listView.Columns.Add("可用空间",100);
+            listView.Columns.Add("使用空间",100);
+            listView.Columns.Add("使用率",100);
             listView.BeginUpdate();
             listView.Items.Clear();
             curPath = null;
-            foreach (string drvName in Directory.GetLogicalDrives())//获得硬盘分区名
+            long ts;
+            long tfs;
+            foreach (DriveInfo drive in DriveInfo.GetDrives())//获得硬盘分区名
             {
-                ListViewItem listItem = new ListViewItem(drvName, ImgListIndexs.Disk);
-                DirectoryInfo directoryInfo = new DirectoryInfo(drvName);
-                listItem.Text = drvName;
-                listItem.SubItems.Add(directoryInfo.LastWriteTime.ToString());
-                listItem.SubItems.Add("文件夹");
+                ListViewItem listItem = new ListViewItem(drive.Name, ImgListIndexs.Disk);
+                listItem.Text = drive.Name;
+                ts = drive.TotalSize;
+                tfs = drive.TotalFreeSpace;
+                listItem.SubItems.Add(formattingKB(ts));
+                listItem.SubItems.Add(formattingKB(tfs));
+                listItem.SubItems.Add(formattingKB(ts-tfs));
+                listItem.SubItems.Add(Math.Round((double)(ts -tfs)/ts,4)*100 + " %");
                 listView.Items.Add(listItem);//添加进来
             }
             listView.EndUpdate();

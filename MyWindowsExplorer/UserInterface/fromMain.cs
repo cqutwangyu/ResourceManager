@@ -19,33 +19,33 @@ namespace MyWindowsExplorer
         {
             bll = new FromMainBLL(treeView,listView, this.Handle, largeIconImageList,
                 smallImageList,curPathText,  leftPathButton,  
-                rightPathButton,  backUpPathButton,fileCheckBox,folderCheckBox);
+                rightPathButton,  backUpPathButton,fileCheckBox,folderCheckBox,fileCountText);
             bll.fromMainInit();
         }
         //树节点点击事件
-        private void TreeViewFile_AfterSelect(object sender, TreeViewEventArgs e)
+        private void treeViewNodeAfterSelect(object sender, TreeViewEventArgs e)
         {
             bll.addPath = true;
             //树节点显示
-            bll.TreeViewShow(e.Node);
+            bll.treeViewShow(e.Node);
             //列表显示
-            bll.ListViewShow(e.Node);
+            bll.listViewShow(e.Node);
             bll.updatePathButtonState();
         }
 
         //树节点展开事件
-        private void treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+        private void treeViewNodeBeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             //树节点显示
             bll.treeViewShowFolderTwoTier(e.Node);
         }
         //列表文件夹双击事件
-        private void ListViewFile_DoubleClick(object sender, EventArgs e)
+        private void listViewFileDoubleClick(object sender, EventArgs e)
         {
             bll.addPath = true;
             foreach (int ListIndex in listView.SelectedIndices)
             {
-                bll.ListViewShow(bll.curPath+listView.Items[ListIndex].Text);
+                bll.listViewShow(bll.curPath+listView.Items[ListIndex].Text);
             }
         }
         
@@ -70,38 +70,38 @@ namespace MyWindowsExplorer
             //判断回车键
             if (e.KeyCode == Keys.Enter)
             {
-                bll.ListViewShow(curPathText.Text);
+                bll.listViewShow(curPathText.Text);
             }
         }
 
-        private void 大图标ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void largeIconShowMenuItem_Click(object sender, EventArgs e)
         {
-            bll.LargeIconShow();
+            bll.largeIconShow();
         }
 
-        private void 小图标ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void smallIconShowMenuItem_Click(object sender, EventArgs e)
         {
-            bll.SmallIconShow();
+            bll.smallIconShow();
         }
 
-        private void 详细信息ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void detailsShowMenuItem_Click(object sender, EventArgs e)
         {
-            bll.DetailsShow();
+            bll.detailsShow();
         }
 
-        private void 列表ToolStripMenuItem_Click(object sender, EventArgs e)
+        private void listShowMenuItem_Click(object sender, EventArgs e)
         {
-            bll.ListShow();
+            bll.listShow();
         }
 
         private void folderCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            bll.ShowFilter();
+            bll.showFilter();
         }
 
         private void fileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
-            bll.ShowFilter();
+            bll.showFilter();
         }
     }
 }

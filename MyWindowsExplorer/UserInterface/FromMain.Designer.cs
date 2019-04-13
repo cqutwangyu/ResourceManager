@@ -45,10 +45,10 @@ namespace MyWindowsExplorer
             this.panel4 = new System.Windows.Forms.Panel();
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.viewModeMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.大图标ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.小图标ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.详细信息ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.列表ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.largeIconShowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.smallIconShowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.detailsShowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.listShowMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.panel2 = new System.Windows.Forms.Panel();
             this.Body = new System.Windows.Forms.Panel();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
@@ -59,8 +59,9 @@ namespace MyWindowsExplorer
             this.length = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.smallImageList = new System.Windows.Forms.ImageList(this.components);
             this.foot = new System.Windows.Forms.Panel();
-            this.fileCheckBox = new System.Windows.Forms.CheckBox();
             this.folderCheckBox = new System.Windows.Forms.CheckBox();
+            this.fileCheckBox = new System.Windows.Forms.CheckBox();
+            this.fileCountText = new System.Windows.Forms.Label();
             this.head.SuspendLayout();
             this.panel5.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -87,8 +88,8 @@ namespace MyWindowsExplorer
             this.treeView.SelectedImageIndex = 0;
             this.treeView.Size = new System.Drawing.Size(215, 463);
             this.treeView.TabIndex = 2;
-            this.treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeView_BeforeExpand);
-            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewFile_AfterSelect);
+            this.treeView.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.treeViewNodeBeforeExpand);
+            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeViewNodeAfterSelect);
             // 
             // treeImageList
             // 
@@ -207,41 +208,41 @@ namespace MyWindowsExplorer
             // viewModeMenuItem
             // 
             this.viewModeMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.大图标ToolStripMenuItem,
-            this.小图标ToolStripMenuItem,
-            this.详细信息ToolStripMenuItem,
-            this.列表ToolStripMenuItem});
+            this.largeIconShowMenuItem,
+            this.smallIconShowMenuItem,
+            this.detailsShowMenuItem,
+            this.listShowMenuItem});
             this.viewModeMenuItem.Name = "viewModeMenuItem";
             this.viewModeMenuItem.Size = new System.Drawing.Size(51, 24);
             this.viewModeMenuItem.Text = "查看";
             // 
             // 大图标ToolStripMenuItem
             // 
-            this.大图标ToolStripMenuItem.Name = "大图标ToolStripMenuItem";
-            this.大图标ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.大图标ToolStripMenuItem.Text = "大图标";
-            this.大图标ToolStripMenuItem.Click += new System.EventHandler(this.大图标ToolStripMenuItem_Click);
+            this.largeIconShowMenuItem.Name = "largeIconShowMenuItem";
+            this.largeIconShowMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.largeIconShowMenuItem.Text = "大图标";
+            this.largeIconShowMenuItem.Click += new System.EventHandler(this.largeIconShowMenuItem_Click);
             // 
             // 小图标ToolStripMenuItem
             // 
-            this.小图标ToolStripMenuItem.Name = "小图标ToolStripMenuItem";
-            this.小图标ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.小图标ToolStripMenuItem.Text = "小图标";
-            this.小图标ToolStripMenuItem.Click += new System.EventHandler(this.小图标ToolStripMenuItem_Click);
+            this.smallIconShowMenuItem.Name = "smallIconShowMenuItem";
+            this.smallIconShowMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.smallIconShowMenuItem.Text = "小图标";
+            this.smallIconShowMenuItem.Click += new System.EventHandler(this.smallIconShowMenuItem_Click);
             // 
             // 详细信息ToolStripMenuItem
             // 
-            this.详细信息ToolStripMenuItem.Name = "详细信息ToolStripMenuItem";
-            this.详细信息ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.详细信息ToolStripMenuItem.Text = "详细信息";
-            this.详细信息ToolStripMenuItem.Click += new System.EventHandler(this.详细信息ToolStripMenuItem_Click);
+            this.detailsShowMenuItem.Name = "detailsShowMenuItem";
+            this.detailsShowMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.detailsShowMenuItem.Text = "详细信息";
+            this.detailsShowMenuItem.Click += new System.EventHandler(this.detailsShowMenuItem_Click);
             // 
             // 列表ToolStripMenuItem
             // 
-            this.列表ToolStripMenuItem.Name = "列表ToolStripMenuItem";
-            this.列表ToolStripMenuItem.Size = new System.Drawing.Size(216, 26);
-            this.列表ToolStripMenuItem.Text = "列表";
-            this.列表ToolStripMenuItem.Click += new System.EventHandler(this.列表ToolStripMenuItem_Click);
+            this.listShowMenuItem.Name = "listShowMenuItem";
+            this.listShowMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.listShowMenuItem.Text = "列表";
+            this.listShowMenuItem.Click += new System.EventHandler(this.listShowMenuItem_Click);
             // 
             // panel2
             // 
@@ -296,7 +297,7 @@ namespace MyWindowsExplorer
             this.listView.TabIndex = 0;
             this.listView.UseCompatibleStateImageBehavior = false;
             this.listView.View = System.Windows.Forms.View.Details;
-            this.listView.DoubleClick += new System.EventHandler(this.ListViewFile_DoubleClick);
+            this.listView.DoubleClick += new System.EventHandler(this.listViewFileDoubleClick);
             // 
             // name
             // 
@@ -331,12 +332,27 @@ namespace MyWindowsExplorer
             // 
             this.foot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.foot.Controls.Add(this.fileCountText);
             this.foot.Controls.Add(this.folderCheckBox);
             this.foot.Controls.Add(this.fileCheckBox);
             this.foot.Location = new System.Drawing.Point(0, 508);
             this.foot.Name = "foot";
             this.foot.Size = new System.Drawing.Size(1066, 27);
             this.foot.TabIndex = 4;
+            // 
+            // folderCheckBox
+            // 
+            this.folderCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.folderCheckBox.AutoSize = true;
+            this.folderCheckBox.Checked = true;
+            this.folderCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.folderCheckBox.Location = new System.Drawing.Point(855, 5);
+            this.folderCheckBox.Name = "folderCheckBox";
+            this.folderCheckBox.Size = new System.Drawing.Size(104, 19);
+            this.folderCheckBox.TabIndex = 1;
+            this.folderCheckBox.Text = "显示文件夹";
+            this.folderCheckBox.UseVisualStyleBackColor = true;
+            this.folderCheckBox.CheckedChanged += new System.EventHandler(this.folderCheckBox_CheckedChanged);
             // 
             // fileCheckBox
             // 
@@ -352,19 +368,14 @@ namespace MyWindowsExplorer
             this.fileCheckBox.UseVisualStyleBackColor = true;
             this.fileCheckBox.CheckedChanged += new System.EventHandler(this.fileCheckBox_CheckedChanged);
             // 
-            // folderCheckBox
+            // fileCountText
             // 
-            this.folderCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.folderCheckBox.AutoSize = true;
-            this.folderCheckBox.Checked = true;
-            this.folderCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.folderCheckBox.Location = new System.Drawing.Point(855, 5);
-            this.folderCheckBox.Name = "folderCheckBox";
-            this.folderCheckBox.Size = new System.Drawing.Size(104, 19);
-            this.folderCheckBox.TabIndex = 1;
-            this.folderCheckBox.Text = "显示文件夹";
-            this.folderCheckBox.UseVisualStyleBackColor = true;
-            this.folderCheckBox.CheckedChanged += new System.EventHandler(this.folderCheckBox_CheckedChanged);
+            this.fileCountText.AutoSize = true;
+            this.fileCountText.Location = new System.Drawing.Point(13, 9);
+            this.fileCountText.Name = "fileCountText";
+            this.fileCountText.Size = new System.Drawing.Size(55, 15);
+            this.fileCountText.TabIndex = 2;
+            this.fileCountText.Text = "label1";
             // 
             // FromMain
             // 
@@ -416,10 +427,10 @@ namespace MyWindowsExplorer
         private System.Windows.Forms.ToolStripButton backUpPathButton;
         private System.Windows.Forms.TextBox curPathText;
         private System.Windows.Forms.ToolStripMenuItem viewModeMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 大图标ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 小图标ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 详细信息ToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 列表ToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem largeIconShowMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem smallIconShowMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem detailsShowMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem listShowMenuItem;
         private System.Windows.Forms.ImageList treeImageList;
         private ColumnHeader name;
         private ColumnHeader updateTime;
@@ -428,6 +439,7 @@ namespace MyWindowsExplorer
         private ImageList smallImageList;
         private CheckBox folderCheckBox;
         private CheckBox fileCheckBox;
+        private Label fileCountText;
     }
 }
 
