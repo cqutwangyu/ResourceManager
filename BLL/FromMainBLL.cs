@@ -1,17 +1,15 @@
 ﻿using Microsoft.Win32;
-using MyWindowsExplorer.view;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Security.AccessControl;
 using System.Windows.Forms;
 
-namespace MyWindowsExplorer.BusinessLogicLayer
+namespace BLL
 {
-    class FromMainBLL
+    public class FromMainBLL
     {
         //显示控件
         private TreeView treeView;
@@ -92,6 +90,51 @@ namespace MyWindowsExplorer.BusinessLogicLayer
         public void detailsShow()
         {
             listView.View = View.Details;
+        }
+
+        //重命名文件
+        public void rename(string oldPath,string newFileName)
+        {
+            string newPath;
+            try
+            {
+                if (Directory.Exists(oldPath))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(oldPath);
+                    newPath = oldPath.Replace(directoryInfo.Name, newFileName);
+                    directoryInfo.MoveTo(newPath);
+                    listViewShowPath(curPath);
+                }
+                else if (File.Exists(oldPath))
+                {
+                    FileInfo fileInfo = new FileInfo(oldPath);
+                    newPath = oldPath.Replace(fileInfo.Name, newFileName);
+                    Console.WriteLine(newPath);
+                    fileInfo.MoveTo(newPath);
+                    listViewShowPath(curPath);
+                }
+            }
+            catch
+            {
+                MessageBox.Show("你需要提供管理员权限才能重命名此文件！");
+            }
+        }
+
+        //输入路径，获得文件名
+        public string getFileName(string path)
+        {
+            string fileName = null;
+            if (Directory.Exists(path))
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                fileName = directoryInfo.Name;
+            }
+            else if (File.Exists(path))
+            {
+                FileInfo fileInfo = new FileInfo(path);
+                fileName = fileInfo.Name;
+            }
+            return fileName;
         }
 
         //文件显示过滤

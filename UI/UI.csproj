@@ -4,17 +4,15 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{B288AAA6-106F-4305-B043-C16DFFC09BB8}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>MyWindowsExplorer</RootNamespace>
-    <AssemblyName>MyWindowsExplorer</AssemblyName>
+    <ProjectGuid>{08A49EC3-050E-4431-9DF9-432A1BB5D5A1}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>UI</RootNamespace>
+    <AssemblyName>UI</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,19 +22,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>macbook_128px_1228613_easyicon.net.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>MyWindowsExplorer.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -45,45 +36,39 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="FromFileName.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FromFileName.Designer.cs">
+      <DependentUpon>FromFileName.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FromMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FromMain.Designer.cs">
+      <DependentUpon>FromMain.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="FromFileName.resx">
+      <DependentUpon>FromFileName.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
+    <EmbeddedResource Include="FromMain.resx">
+      <DependentUpon>FromMain.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <ItemGroup>
-    <Content Include="macbook_128px_1228613_easyicon.net.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\UI\UI.csproj">
-      <Project>{08a49ec3-050e-4431-9df9-432a1bb5d5a1}</Project>
-      <Name>UI</Name>
+    <ProjectReference Include="..\BLL\BLL.csproj">
+      <Project>{6b19b932-94a6-4779-bfa5-f3d575977895}</Project>
+      <Name>BLL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

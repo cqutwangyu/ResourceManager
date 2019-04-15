@@ -1,4 +1,5 @@
-﻿namespace MyWindowsExplorer.view
+﻿
+namespace BLL
 {
     class ImgListIndexs
     {

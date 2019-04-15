@@ -1,8 +1,8 @@
-﻿using MyWindowsExplorer.BusinessLogicLayer;
+﻿using BLL;
 using System;
 using System.Windows.Forms;
 
-namespace MyWindowsExplorer
+namespace UI
 {
     public partial class FromMain : Form
     {
@@ -102,6 +102,40 @@ namespace MyWindowsExplorer
         private void fileCheckBox_CheckedChanged(object sender, EventArgs e)
         {
             bll.showFilter();
+        }
+
+        private void renameMenuItem_Click(object sender, EventArgs e)
+        {
+            string oldPath=null;
+            string newFileName=null;
+            string oldFileName = null;
+            //获取选择的文件路径
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                oldPath=bll.curPath + listView.Items[ListIndex].Text;
+            }
+            //获取原文件名
+            oldFileName = bll.getFileName(oldPath);
+            if (oldFileName == null)
+            {
+                return;
+            }
+            //弹出框
+            UI.FileNameInputBox fileNameInputBox = new FileNameInputBox();
+            //设置原文件名
+            fileNameInputBox.oldFileName = oldFileName;
+            fileNameInputBox.ShowDialog();
+            //如果弹出框返回OK
+            if (fileNameInputBox.DialogResult == DialogResult.OK)
+            {
+                //获得新文件名
+                newFileName = fileNameInputBox.newFileName;
+            }
+            //修改文件名
+            if (oldPath != null && newFileName != null)
+            {
+                bll.rename(oldPath, newFileName);
+            }
         }
     }
 }
