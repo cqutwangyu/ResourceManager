@@ -17,9 +17,12 @@ namespace UI
         //窗口加载事件
         private void fromMain_Load(object sender, EventArgs e)
         {
-            bll = new FromMainBLL(treeView,listView, this.Handle, largeIconImageList,
-                smallImageList,curPathText,  leftPathButton,  
-                rightPathButton,  backUpPathButton,fileCheckBox,folderCheckBox,fileCountText);
+            //bll = new FromMainBLL(treeView, listView, curPathText, leftPathButton, rightPathButton, backUpPathButton, fileCheckBox, folderCheckBox, this.Handle, largeIconImageList, smallImageList);
+            bll = new FromMainBLL();
+            bll.setTreeView(treeView).setListView(listView).setCurPathText(curPathText).setLeftPathButton(leftPathButton)
+                .setRightPathButton(rightPathButton).setBackUpPathButton(backUpPathButton).setFileCheckBox(fileCheckBox)
+                .setFolderCheckBox(folderCheckBox).setHandle(this.Handle).setLargeIconImageList(largeIconImageList)
+                .setSmallImageList(smallImageList).setFileCountText(fileCountText);
             bll.fromMainInit();
         }
         //树节点点击事件

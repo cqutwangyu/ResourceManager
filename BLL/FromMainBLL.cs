@@ -38,26 +38,103 @@ namespace BLL
         private ImageList largeIconImageList;
         private ImageList smallImageList;
 
-
-        public FromMainBLL(TreeView treeView,ListView listView, IntPtr handle,
-            ImageList largeIconImageList, ImageList smallImageList, TextBox curPathText,
+        public FromMainBLL(TreeView treeView, ListView listView, TextBox curPathText,
             ToolStripButton leftPathButton, ToolStripButton rightPathButton,
-            ToolStripButton backUpPathButton,CheckBox fileCheckBox, CheckBox folderCheckBox,
-            Label fileCountText)
-        {   this.listView = listView;
+            ToolStripButton backUpPathButton, CheckBox fileCheckBox,
+            CheckBox folderCheckBox, IntPtr handle, ImageList largeIconImageList, ImageList smallImageList, Label fileCountText)
+        {
             this.treeView = treeView;
-            this.handle=handle;
+            this.listView = listView;
+            this.curPathText = curPathText;
+            this.leftPathButton = leftPathButton;
+            this.rightPathButton = rightPathButton;
+            this.backUpPathButton = backUpPathButton;
+            this.fileCheckBox = fileCheckBox;
+            this.folderCheckBox = folderCheckBox;
+            this.handle = handle;
             this.largeIconImageList = largeIconImageList;
             this.smallImageList = smallImageList;
-            this.curPathText = curPathText;
-            this.startIndex = largeIconImageList.Images.Count;
-            this.leftPathButton= leftPathButton;
-            this.rightPathButton= rightPathButton;
-            this.backUpPathButton= backUpPathButton;
-            this.fileCheckBox=fileCheckBox; 
-            this.folderCheckBox=folderCheckBox;
             this.fileCountText = fileCountText;
-         }
+            this.startIndex = largeIconImageList.Images.Count;
+        }
+
+        public FromMainBLL()
+        {
+        }
+
+        public FromMainBLL setTreeView(TreeView treeView)
+        {
+            this.treeView = treeView;
+            return this;
+        }
+
+        public FromMainBLL setListView(ListView listView)
+        {
+            this.listView = listView;
+            return this;
+        }
+
+        public FromMainBLL setCurPathText(TextBox curPathText)
+        {
+            this.curPathText = curPathText;
+            return this;
+        }
+
+        public FromMainBLL setLeftPathButton(ToolStripButton leftPathButton)
+        {
+            this.leftPathButton = leftPathButton;
+            return this;
+        }
+
+        public FromMainBLL setRightPathButton(ToolStripButton rightPathButton)
+        {
+            this.rightPathButton = rightPathButton;
+            return this;
+        }
+
+        public FromMainBLL setBackUpPathButton(ToolStripButton backUpPathButton)
+        {
+            this.backUpPathButton = backUpPathButton;
+            return this;
+        }
+
+        public FromMainBLL setFileCheckBox(CheckBox fileCheckBox)
+        {
+            this.fileCheckBox = fileCheckBox;
+            return this;
+        }
+
+        public FromMainBLL setFolderCheckBox(CheckBox folderCheckBox)
+        {
+            this.folderCheckBox = folderCheckBox;
+            return this;
+        }
+
+        public FromMainBLL setHandle(IntPtr handle)
+        {
+            this.handle = handle;
+            return this;
+        }
+
+        public FromMainBLL setLargeIconImageList(ImageList largeIconImageList)
+        {
+            this.largeIconImageList = largeIconImageList;
+            this.startIndex = largeIconImageList.Images.Count;
+            return this;
+        }
+
+        public FromMainBLL setSmallImageList(ImageList smallImageList)
+        {
+            this.smallImageList = smallImageList;
+            return this;
+        }
+
+        public FromMainBLL setFileCountText(Label fileCountText)
+        {
+            this.fileCountText = fileCountText;
+            return this;
+        }
+
 
         //窗口初始化
         public void fromMainInit()
