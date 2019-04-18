@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWindowsExplorer", "MyWindowsExplorer\MyWindowsExplorer.csproj", "{B288AAA6-106F-4305-B043-C16DFFC09BB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "MyWindowsExplorer\ResourceManager.csproj", "{B288AAA6-106F-4305-B043-C16DFFC09BB8}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "MyWindowsExplorerSetup", "MyWindowsExplorerSetup\MyWindowsExplorerSetup.vdproj", "{79EB3A20-9954-44C6-8A20-119C8D3D52A1}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ResourceManagerSetup", "MyWindowsExplorerSetup\MyWindowsExplorerSetup.vdproj", "{79EB3A20-9954-44C6-8A20-119C8D3D52A1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{6B19B932-94A6-4779-BFA5-F3D575977895}"
 EndProject
