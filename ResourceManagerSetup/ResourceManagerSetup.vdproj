@@ -15,12 +15,6 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_33FC37921A4E42E2A4A1E2C130441DD0"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_4361E9C4ADAE4C59024A5AC02FCAE4FC"
         "OwnerKey" = "8:_D6ED3ABEFFB34D27AE4B5C2CF014C8E2"
         "MsmSig" = "8:_UNDEFINED"
@@ -45,14 +39,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_D6ED3ABEFFB34D27AE4B5C2CF014C8E2"
+        "MsmKey" = "8:_80728CF974864098AED0B8F03B294134"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_7BB5968929C6AEC188FF61BF1E8139D8"
+        "MsmKey" = "8:_D6ED3ABEFFB34D27AE4B5C2CF014C8E2"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -73,6 +67,12 @@
         "OwnerKey" = "8:_4361E9C4ADAE4C59024A5AC02FCAE4FC"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_7BB5968929C6AEC188FF61BF1E8139D8"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -91,6 +91,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -107,6 +123,14 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+            }
         }
     }
     "Deployable"
@@ -136,26 +160,6 @@
         }
         "File"
         {
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_33FC37921A4E42E2A4A1E2C130441DD0"
-            {
-            "SourcePath" = "8:G:\\下载\\icon_umlaam38aja\\macbook_128px_1228613_easyicon.net.ico"
-            "TargetName" = "8:macbook_128px_1228613_easyicon.net.ico"
-            "Tag" = "8:"
-            "Folder" = "8:_96BD9C200E4246F68C809531951528FE"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4361E9C4ADAE4C59024A5AC02FCAE4FC"
             {
             "AssemblyRegister" = "3:1"
@@ -249,6 +253,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_80728CF974864098AED0B8F03B294134"
+            {
+            "SourcePath" = "8:..\\Resource\\Image\\macbook_128px_1228613_easyicon.net.ico"
+            "TargetName" = "8:macbook_128px_1228613_easyicon.net.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_96BD9C200E4246F68C809531951528FE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -306,7 +330,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:ResourceManagerSetup"
         "ProductCode" = "8:{0ADCC7C5-88A8-436B-B3C1-2001A40B6675}"
-        "PackageCode" = "8:{7BE611E7-EC9B-43DE-950D-FBC92DF2E941}"
+        "PackageCode" = "8:{63EA760F-3C70-4498-B380-9126C809DFFA}"
         "UpgradeCode" = "8:{561525B5-8A9C-4C26-85AF-CC9C8CA42446}"
         "AspNetVersion" = "8:2.0.50727.0"
         "RestartWWWService" = "11:FALSE"
@@ -437,7 +461,7 @@
             "Target" = "8:_D6ED3ABEFFB34D27AE4B5C2CF014C8E2"
             "Folder" = "8:_CD39B5540FD84C5DBD4DCB6531B73F9E"
             "WorkingFolder" = "8:_96BD9C200E4246F68C809531951528FE"
-            "Icon" = "8:_33FC37921A4E42E2A4A1E2C130441DD0"
+            "Icon" = "8:_80728CF974864098AED0B8F03B294134"
             "Feature" = "8:"
             }
         }
