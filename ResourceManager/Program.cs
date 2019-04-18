@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using UI;
 
-namespace MyWindowsExplorer
+namespace ResourceManager
 {
     static class Program
     {

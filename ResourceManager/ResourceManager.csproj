@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B288AAA6-106F-4305-B043-C16DFFC09BB8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>MyWindowsExplorer</RootNamespace>
-    <AssemblyName>MyWindowsExplorer</AssemblyName>
+    <RootNamespace>ResourceManager</RootNamespace>
+    <AssemblyName>ResourceManager</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,7 +36,7 @@
     <ApplicationIcon>macbook_128px_1228613_easyicon.net.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>MyWindowsExplorer.Program</StartupObject>
+    <StartupObject>ResourceManager.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -62,6 +62,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

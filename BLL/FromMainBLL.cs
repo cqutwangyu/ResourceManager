@@ -286,11 +286,7 @@ namespace BLL
             {
                 curPath = null;
                 pathIndex = -1;
-                foreach (string DrvName in Directory.GetLogicalDrives())//获得硬盘分区名
-                {
-                    ListViewItem ItemList = new ListViewItem(DrvName, ImgListIndexs.Disk);
-                    listView.Items.Add(ItemList);//添加进来
-                }
+                listViewShowDrv();
                 curPathText.Text = "";
             }
             updatePathButtonState();

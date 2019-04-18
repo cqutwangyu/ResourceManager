@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28307.539
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "MyWindowsExplorer\ResourceManager.csproj", "{B288AAA6-106F-4305-B043-C16DFFC09BB8}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ResourceManagerSetup", "MyWindowsExplorerSetup\MyWindowsExplorerSetup.vdproj", "{79EB3A20-9954-44C6-8A20-119C8D3D52A1}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResourceManager", "ResourceManager\ResourceManager.csproj", "{B288AAA6-106F-4305-B043-C16DFFC09BB8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BLL", "BLL\BLL.csproj", "{6B19B932-94A6-4779-BFA5-F3D575977895}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAL", "DAL\DAL.csproj", "{8AE2CC0C-B587-4429-9AD5-82C3AAB37543}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UI", "UI\UI.csproj", "{08A49EC3-050E-4431-9DF9-432A1BB5D5A1}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ResourceManagerSetup", "ResourceManagerSetup\ResourceManagerSetup.vdproj", "{3474A4E5-CCD3-4A27-B869-3644218F7404}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,8 +23,6 @@ Global
 		{B288AAA6-106F-4305-B043-C16DFFC09BB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B288AAA6-106F-4305-B043-C16DFFC09BB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B288AAA6-106F-4305-B043-C16DFFC09BB8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{79EB3A20-9954-44C6-8A20-119C8D3D52A1}.Debug|Any CPU.ActiveCfg = Debug
-		{79EB3A20-9954-44C6-8A20-119C8D3D52A1}.Release|Any CPU.ActiveCfg = Release
 		{6B19B932-94A6-4779-BFA5-F3D575977895}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6B19B932-94A6-4779-BFA5-F3D575977895}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B19B932-94A6-4779-BFA5-F3D575977895}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -37,6 +35,8 @@ Global
 		{08A49EC3-050E-4431-9DF9-432A1BB5D5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{08A49EC3-050E-4431-9DF9-432A1BB5D5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{08A49EC3-050E-4431-9DF9-432A1BB5D5A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3474A4E5-CCD3-4A27-B869-3644218F7404}.Debug|Any CPU.ActiveCfg = Debug
+		{3474A4E5-CCD3-4A27-B869-3644218F7404}.Release|Any CPU.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
