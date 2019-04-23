@@ -31,5 +31,13 @@ namespace UI
             this.Close();
         }
 
+        private void fileNameText_KeyDown(object sender, KeyEventArgs e)
+        {
+            //判断回车键
+            if (e.KeyCode == Keys.Enter)
+            {
+                submitButton_Click(null, null);
+            }
+        }
     }
 }

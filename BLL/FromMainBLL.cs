@@ -20,6 +20,17 @@ namespace BLL
         private CheckBox fileCheckBox;
         private CheckBox folderCheckBox;
         private Label fileCountText;
+
+        //右键菜单
+        private ContextMenuStrip contextMenuStrip;
+        private ToolStripItem openMenuItem;
+        private ToolStripItem refreshMenuItem;
+        private ToolStripItem copyMenuItem;
+        private ToolStripItem pasteMenuItem;
+        private ToolStripItem deleteMenuItem;
+        private ToolStripItem renameMenuItem;
+        private ToolStripItem newMenuItem;
+        private ToolStripItem attributeMenuItem;
         //路径
         List<string> pathList = new List<string>();
         private string simpleFileName=null;
@@ -29,6 +40,9 @@ namespace BLL
         private int pathSize=0;
         public bool addPath=false;
         private string rootName = "此电脑";
+        //被复制的文件路径
+        private string copyPath = null;
+
         //图标
         Dictionary<string, int> extIcon = new Dictionary<string, int>();
         int startIndex;
@@ -134,6 +148,18 @@ namespace BLL
             return this;
         }
 
+        public FromMainBLL setContextMenuStrip(ContextMenuStrip contextMenuStrip) {
+            this.contextMenuStrip = contextMenuStrip;
+            this.openMenuItem= findToolStripItem("openMenuItem");
+            this.refreshMenuItem = findToolStripItem("refreshMenuItem");
+            this.copyMenuItem = findToolStripItem("copyMenuItem");
+            this.pasteMenuItem = findToolStripItem("pasteMenuItem");
+            this.deleteMenuItem = findToolStripItem("deleteMenuItem");
+            this.renameMenuItem = findToolStripItem("renameMenuItem");
+            this.newMenuItem = findToolStripItem("newMenuItem");
+            this.attributeMenuItem = findToolStripItem("attributeMenuItem");
+            return this;
+        }
 
         //窗口初始化
         public void fromMainInit()
@@ -154,6 +180,33 @@ namespace BLL
         public void largeIconShow()
         {
             listView.View = View.LargeIcon;
+        }
+
+        //打开文件或文件夹
+        public void open(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                if (testFolderAccess(path))
+                {
+                    addPath = true;
+                    curPath = path;
+                    updatePath(path);
+                    listViewShowPath(path);
+                }
+            }
+            if (File.Exists(path))
+            {
+                //启动该文件
+                try
+                {
+                    System.Diagnostics.Process.Start(path);
+                }
+                catch
+                {
+                    MessageBox.Show("无法打开文件：" + path);
+                }
+            }
         }
 
         //小图标显示
@@ -185,7 +238,6 @@ namespace BLL
                 {
                     FileInfo fileInfo = new FileInfo(oldPath);
                     newPath = oldPath.Replace(fileInfo.Name, newFileName);
-                    Console.WriteLine(newPath);
                     fileInfo.MoveTo(newPath);
                     listViewShowPath(curPath);
                 }
@@ -194,6 +246,104 @@ namespace BLL
             {
                 MessageBox.Show("你需要提供管理员权限才能重命名此文件！");
             }
+            finally
+            {
+                refreshList();
+            }
+        }
+
+        //新建文件
+        public void createFile(string newFileName)
+        {
+            try
+            {
+                if (!File.Exists(curPath + newFileName))
+                {
+                    FileInfo fileInfo = new FileInfo(curPath + newFileName);
+                    //创建文件并关闭输入流避免占用
+                    fileInfo.Create().Close();
+                }
+                else
+                {
+                    MessageBox.Show("文件已存在！");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("错误：" + e.ToString());
+            }
+            finally
+            {
+                refreshList();
+            }
+        }
+
+        //新建文件夹
+        public void createFolder(string newFolderName)
+        {
+            try
+            {
+                if (!Directory.Exists(curPath + newFolderName))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(curPath + newFolderName);
+                    //创建文件夹
+                    directoryInfo.Create();
+                }
+                else
+                {
+                    MessageBox.Show("文件夹已存在！");
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("错误：" + e.ToString());
+            }
+            finally
+            {
+                refreshList();
+            }
+        }
+
+        //删除文件或文件夹
+        public void delete(string path)
+        {
+            try
+            {
+                if (Directory.Exists(path))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                    deleteFolder(directoryInfo);
+                }
+                else if (File.Exists(path))
+                {
+                    FileInfo fileInfo = new FileInfo(path);
+                    fileInfo.Delete();
+                }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("错误：" + e.ToString());
+            }
+            finally
+            {
+                refreshList();
+            }
+        }
+
+        //删除文件夹
+        public void deleteFolder(DirectoryInfo parentDirectoryInfo)
+        {
+            DirectoryInfo[] directoryInfos = parentDirectoryInfo.GetDirectories();
+            foreach(DirectoryInfo directoryInfo in directoryInfos)
+            {
+                deleteFolder(directoryInfo);
+            }
+            FileInfo[] fileInfos = parentDirectoryInfo.GetFiles();
+            foreach (FileInfo fileInfo in fileInfos)
+            {
+                fileInfo.Delete();
+            }
+            parentDirectoryInfo.Delete();
         }
 
         //输入路径，获得文件名
@@ -329,22 +479,15 @@ namespace BLL
                 listView.Columns.Add("修改时间", 150);
                 listView.Columns.Add("文件类型", 120);
                 listView.Columns.Add("大小", 120);
-                //try catch 判断是否可访问
-                try
+
+                if (testFolderAccess(nodePath))
                 {
-                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
-                    Directory.GetDirectories(nodePath);
+                    updatePath(nodePath);
+                    //更新路径
+                    pathList.Insert(pathIndex, curPath);
+                    //显示
+                    listViewShowPath(nodePath);
                 }
-                catch
-                {
-                    MessageBox.Show("无法访问路径:" + nodePath);
-                    return;
-                }
-                updatePath(nodePath);
-                //更新路径
-                pathList.Insert(pathIndex, curPath);
-                //显示
-                listViewShowPath(nodePath);
             }
             listView.EndUpdate();
         }
@@ -356,23 +499,15 @@ namespace BLL
             if (Directory.Exists(path))
             {
                 path = pathCompletion(path);
-                //try catch 判断是否可访问
-                try
+                if (testFolderAccess(path))
                 {
-                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
-                    Directory.GetDirectories(path);
+                    //更新路径
+                    DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                    string nodePath = directoryInfo.FullName.Replace(rootName + "\\", "");
+                    updatePath(nodePath);
+                    //显示
+                    listViewShowPath(path);
                 }
-                catch
-                {
-                    MessageBox.Show("无法访问路径:" + path);
-                    return;
-                }
-                //更新路径
-                DirectoryInfo directoryInfo = new DirectoryInfo(path);
-                string nodePath = directoryInfo.FullName.Replace(rootName + "\\", "");
-                updatePath(nodePath);
-                //显示
-                listViewShowPath(path);
             }
             //否则如果被打开的是文件
             else if (File.Exists(path))
@@ -531,6 +666,44 @@ namespace BLL
             listView.EndUpdate();
         }
 
+        //测试文件夹是否可访问
+        private bool testFolderAccess(string path)
+        {
+            if (Directory.Exists(path))
+            {
+                try
+                {
+                    //判断是否有访问权限，如果发生异常则是无法访问，执行catch块程序
+                    Directory.GetDirectories(path);
+                }
+                catch
+                {
+                    MessageBox.Show("无法访问路径:" + path);
+                    return false;
+                }
+            }
+            else
+            {
+                MessageBox.Show("文件夹不存在:" + path);
+                return false;
+            }
+            return true;
+        }
+
+        //刷新目录
+        public void refreshList()
+        {
+            if (curPath != null)
+            {
+                listViewShowPath(curPath);
+            }
+            else
+            {
+                listViewShowDrv();
+            }
+            updatePathButtonState();
+        }
+
         //单位转换，传入字节B转为KB...GB...EB
         private string formattingKB(long length)
         {
@@ -585,7 +758,6 @@ namespace BLL
 
         //更新路径按钮状态
         public void updatePathButtonState()
-
         {
             //左箭头按钮
             if (pathIndex >= 0)
@@ -622,6 +794,64 @@ namespace BLL
             {
                 backUpPathButton.Enabled = false;
             }
+        }
+
+        //更新右键菜单栏状态
+        public void updateContextMenuStrip(string fileName)
+        {
+            //openMenuItem;         打开
+            //refreshMenuItem;      刷新
+            //copyMenuItem;         复制
+            //pasteMenuItem;        粘贴
+            //deleteMenuItem;       删除
+            //renameMenuItem;       重命名
+            //newMenuItem;          新建
+            //attributeMenuItem;    属性
+            
+            //当前路径不可用
+            if (curPath == null)
+            {
+                pasteMenuItem.Visible = false;
+                newMenuItem.Visible = false;
+            }
+            else
+            {
+                pasteMenuItem.Visible = true;
+                newMenuItem.Visible = true;
+            }
+            //没有文件被选中
+            if (fileName == null)
+            {
+                openMenuItem.Visible = false;
+                copyMenuItem.Visible = false;
+                deleteMenuItem.Visible = false;
+                renameMenuItem.Visible = false;
+                attributeMenuItem.Visible = false;
+            }
+            else
+            {
+                openMenuItem.Visible = true;
+                copyMenuItem.Visible = true;
+                deleteMenuItem.Visible = true;
+                renameMenuItem.Visible = true;
+                attributeMenuItem.Visible = true;
+            }
+            //当前路径不可用且没有文件被选中
+            if (curPath == null && fileName == null)
+            {
+                attributeMenuItem.Visible = false;
+            }
+        }
+
+        //获取右键菜单栏控件
+        private ToolStripItem findToolStripItem(string name)
+        {
+            ToolStripItem[] toolStripItems = contextMenuStrip.Items.Find(name, true);
+            if (toolStripItems.Length > 0)
+            {
+                return toolStripItems[0];
+            }
+            return null;
         }
 
         //根据扩展名获取图标 

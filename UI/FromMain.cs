@@ -22,7 +22,7 @@ namespace UI
             bll.setTreeView(treeView).setListView(listView).setCurPathText(curPathText).setLeftPathButton(leftPathButton)
                 .setRightPathButton(rightPathButton).setBackUpPathButton(backUpPathButton).setFileCheckBox(fileCheckBox)
                 .setFolderCheckBox(folderCheckBox).setHandle(this.Handle).setLargeIconImageList(largeIconImageList)
-                .setSmallImageList(smallImageList).setFileCountText(fileCountText);
+                .setSmallImageList(smallImageList).setFileCountText(fileCountText).setContextMenuStrip(contextMenuStrip);
             bll.fromMainInit();
         }
         //树节点点击事件
@@ -138,6 +138,77 @@ namespace UI
             if (oldPath != null && newFileName != null)
             {
                 bll.rename(oldPath, newFileName);
+            }
+        }
+
+        private void deleteMenuItem_Click(object sender, EventArgs e)
+        {
+            //获取选择的文件路径
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                bll.delete(bll.curPath + listView.Items[ListIndex].Text);
+            }
+        }
+
+        private void refreshMenuItem_Click(object sender, EventArgs e)
+        {
+            bll.refreshList();
+        }
+
+        private void newFileMenuItem_Click(object sender, EventArgs e)
+        {
+            //弹出框
+            UI.FileNameInputBox fileNameInputBox = new FileNameInputBox();
+            fileNameInputBox.ShowDialog();
+            //如果弹出框返回OK
+            if (fileNameInputBox.DialogResult == DialogResult.OK)
+            {
+                //创建文件
+                bll.createFile(fileNameInputBox.newFileName);
+            }
+        }
+
+        private void newFolderMenuItem_Click(object sender, EventArgs e)
+        {
+            //弹出框
+            UI.FileNameInputBox fileNameInputBox = new FileNameInputBox();
+            fileNameInputBox.ShowDialog();
+            //如果弹出框返回OK
+            if (fileNameInputBox.DialogResult == DialogResult.OK)
+            {
+                //创建文件夹
+                bll.createFolder(fileNameInputBox.newFileName);
+            }
+        }
+
+        private void contextMenuStrip_Opening(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            string fileName = null;
+            //获取选择的文件路径
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                //加上文件名
+                fileName = listView.Items[ListIndex].Text;
+            }
+            bll.updateContextMenuStrip(fileName);
+        }
+
+        private void openMenuItem_Click(object sender, EventArgs e)
+        {
+            //获取选择的文件路径
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                //打开文件
+                bll.open(bll.curPath+ listView.Items[ListIndex].Text);
+            }
+        }
+
+        private void listView_KeyDown(object sender, KeyEventArgs e)
+        {
+            //判断回车键
+            if (e.KeyCode == Keys.Enter)
+            {
+                openMenuItem_Click(null, null);
             }
         }
     }

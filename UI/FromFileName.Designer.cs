@@ -66,6 +66,7 @@
             this.fileNameText.Name = "fileNameText";
             this.fileNameText.Size = new System.Drawing.Size(225, 25);
             this.fileNameText.TabIndex = 6;
+            this.fileNameText.KeyDown += new System.Windows.Forms.KeyEventHandler(this.fileNameText_KeyDown);
             // 
             // submitButton
             // 
