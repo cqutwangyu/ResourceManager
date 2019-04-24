@@ -115,7 +115,7 @@ namespace UI
             this.newMenuItem,
             this.attributeMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(211, 248);
+            this.contextMenuStrip.Size = new System.Drawing.Size(124, 220);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
             // openMenuItem
@@ -405,11 +405,10 @@ namespace UI
             // 
             // foot
             // 
-            this.foot.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
             this.foot.Controls.Add(this.fileCountText);
             this.foot.Controls.Add(this.folderCheckBox);
             this.foot.Controls.Add(this.fileCheckBox);
+            this.foot.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.foot.Location = new System.Drawing.Point(0, 508);
             this.foot.Name = "foot";
             this.foot.Size = new System.Drawing.Size(1066, 27);

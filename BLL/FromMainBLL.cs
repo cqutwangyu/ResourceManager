@@ -245,6 +245,7 @@ namespace BLL
                         DirectoryInfo targetFolder = new DirectoryInfo(outPutPath);
                         Console.WriteLine(targetFolder.FullName);
                         targetFolder.Create();
+                        refreshList();
                         //传入目标路径和原路径
                         pasteFolder(targetFolder.FullName, copyPath);
                     }
@@ -305,7 +306,6 @@ namespace BLL
                     Console.WriteLine(targetPath + "\\" + fileInfo.Name);
                     fileInfo.CopyTo(targetPath   + "\\" + fileInfo.Name);
                 }
-                refreshList();
             }
         }
 
