@@ -13,6 +13,7 @@ namespace UI
             InitializeComponent();
         }
 
+
         private void FileNameInputBox_Load(object sender, EventArgs e)
         {
             fileNameText.Text= oldFileName;
@@ -20,7 +21,14 @@ namespace UI
 
         private void submitButton_Click(object sender, EventArgs e)
         {
-            this.DialogResult = DialogResult.OK;
+            if (fileNameText.Text == "")
+            {
+                this.DialogResult = DialogResult.No;
+            }
+            else
+            {
+                this.DialogResult = DialogResult.OK;
+            }
             newFileName = fileNameText.Text;
             this.Close();
         }

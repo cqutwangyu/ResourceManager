@@ -144,10 +144,8 @@ namespace UI
         private void deleteMenuItem_Click(object sender, EventArgs e)
         {
             //获取选择的文件路径
-            foreach (int ListIndex in listView.SelectedIndices)
-            {
-                bll.delete(bll.curPath + listView.Items[ListIndex].Text);
-            }
+            System.Collections.IList list = listView.SelectedIndices;
+                bll.deleteBatches(list);
         }
 
         private void refreshMenuItem_Click(object sender, EventArgs e)
@@ -172,6 +170,7 @@ namespace UI
         {
             //弹出框
             UI.FileNameInputBox fileNameInputBox = new FileNameInputBox();
+            fileNameInputBox.oldFileName="新建文件夹";
             fileNameInputBox.ShowDialog();
             //如果弹出框返回OK
             if (fileNameInputBox.DialogResult == DialogResult.OK)
@@ -206,9 +205,70 @@ namespace UI
         private void listView_KeyDown(object sender, KeyEventArgs e)
         {
             //判断回车键
-            if (e.KeyCode == Keys.Enter)
+            switch (e.KeyCode)
             {
-                openMenuItem_Click(null, null);
+                case Keys.Enter:
+                    Console.WriteLine("打开");
+                    openMenuItem_Click(null, null);
+                    break;
+                case Keys.Delete:
+                    Console.WriteLine("删除");
+                    deleteMenuItem_Click(null, null);
+                    break;
+                case Keys.Back:
+                    Console.WriteLine("后退");
+                    leftPath_Click(null, null);
+                    break;
+                default:
+                    break;
+            }
+            if (e.Control)
+            {
+                switch (e.KeyCode)
+                {
+                    case Keys.C:
+                        Console.WriteLine("复制");
+                        copyMenuItem_Click(null, null);
+                        break;
+                    case Keys.V:
+                        Console.WriteLine("粘贴");
+                        pasteMenuItem_Click(null, null);
+                        break;
+                    case Keys.X:
+                        Console.WriteLine("剪切");
+                        moveToMenuItem_Click(null, null);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+
+        private void copyMenuItem_Click(object sender, EventArgs e)
+        {
+            bll.isMoveTo = false;
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                bll.copy(bll.curPath + listView.Items[ListIndex].Text);
+            }
+        }
+
+        private void pasteMenuItem_Click(object sender, EventArgs e)
+        {
+            string path = bll.curPath;
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                path += listView.Items[ListIndex].Text;
+            }
+            bll.paste(path);
+        }
+
+        private void moveToMenuItem_Click(object sender, EventArgs e)
+        {
+            bll.isMoveTo = true;
+            foreach (int ListIndex in listView.SelectedIndices)
+            {
+                bll.moveTo(bll.curPath + listView.Items[ListIndex].Text);
             }
         }
     }

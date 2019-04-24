@@ -69,6 +69,7 @@ namespace UI
             this.fileCountText = new System.Windows.Forms.Label();
             this.folderCheckBox = new System.Windows.Forms.CheckBox();
             this.fileCheckBox = new System.Windows.Forms.CheckBox();
+            this.moveToMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.head.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -106,6 +107,7 @@ namespace UI
             this.contextMenuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openMenuItem,
             this.refreshMenuItem,
+            this.moveToMenuItem,
             this.copyMenuItem,
             this.pasteMenuItem,
             this.deleteMenuItem,
@@ -113,7 +115,7 @@ namespace UI
             this.newMenuItem,
             this.attributeMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(124, 196);
+            this.contextMenuStrip.Size = new System.Drawing.Size(211, 248);
             this.contextMenuStrip.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip_Opening);
             // 
             // openMenuItem
@@ -135,12 +137,14 @@ namespace UI
             this.copyMenuItem.Name = "copyMenuItem";
             this.copyMenuItem.Size = new System.Drawing.Size(210, 24);
             this.copyMenuItem.Text = "复制";
+            this.copyMenuItem.Click += new System.EventHandler(this.copyMenuItem_Click);
             // 
             // pasteMenuItem
             // 
             this.pasteMenuItem.Name = "pasteMenuItem";
             this.pasteMenuItem.Size = new System.Drawing.Size(210, 24);
             this.pasteMenuItem.Text = "粘贴";
+            this.pasteMenuItem.Click += new System.EventHandler(this.pasteMenuItem_Click);
             // 
             // deleteMenuItem
             // 
@@ -168,7 +172,7 @@ namespace UI
             // newFolderMenuItem
             // 
             this.newFolderMenuItem.Name = "newFolderMenuItem";
-            this.newFolderMenuItem.Size = new System.Drawing.Size(216, 26);
+            this.newFolderMenuItem.Size = new System.Drawing.Size(129, 26);
             this.newFolderMenuItem.Text = "文件夹";
             this.newFolderMenuItem.Click += new System.EventHandler(this.newFolderMenuItem_Click);
             // 
@@ -448,6 +452,13 @@ namespace UI
             this.fileCheckBox.UseVisualStyleBackColor = true;
             this.fileCheckBox.CheckedChanged += new System.EventHandler(this.fileCheckBox_CheckedChanged);
             // 
+            // moveToMenuItem
+            // 
+            this.moveToMenuItem.Name = "moveToMenuItem";
+            this.moveToMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.moveToMenuItem.Text = "剪切";
+            this.moveToMenuItem.Click += new System.EventHandler(this.moveToMenuItem_Click);
+            // 
             // FromMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
@@ -521,6 +532,7 @@ namespace UI
         private ToolStripMenuItem deleteMenuItem;
         private ToolStripMenuItem attributeMenuItem;
         private ToolStripMenuItem refreshMenuItem;
+        private ToolStripMenuItem moveToMenuItem;
     }
 }
 

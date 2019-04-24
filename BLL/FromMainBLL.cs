@@ -31,6 +31,7 @@ namespace BLL
         private ToolStripItem renameMenuItem;
         private ToolStripItem newMenuItem;
         private ToolStripItem attributeMenuItem;
+        private ToolStripItem moveToMenuItem;
         //路径
         List<string> pathList = new List<string>();
         private string simpleFileName=null;
@@ -42,6 +43,7 @@ namespace BLL
         private string rootName = "此电脑";
         //被复制的文件路径
         private string copyPath = null;
+        public bool isMoveTo = false;
 
         //图标
         Dictionary<string, int> extIcon = new Dictionary<string, int>();
@@ -158,6 +160,7 @@ namespace BLL
             this.renameMenuItem = findToolStripItem("renameMenuItem");
             this.newMenuItem = findToolStripItem("newMenuItem");
             this.attributeMenuItem = findToolStripItem("attributeMenuItem");
+            this.moveToMenuItem = findToolStripItem("moveToMenuItem");
             return this;
         }
 
@@ -219,6 +222,97 @@ namespace BLL
         public void detailsShow()
         {
             listView.View = View.Details;
+        }
+
+        //复制（保存被复制文件的路径）
+        public void copy(string path)
+        {
+            copyPath = path;
+        }
+
+        //粘贴（传入的是生成复制文件的路径）
+        public void paste(string targetPath)
+        {
+            if (isMoveTo == false)
+            {
+                if (Directory.Exists(copyPath))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(copyPath);
+                    string outPutPath = pathAuto(targetPath) + directoryInfo.Name;
+                    if (!Directory.Exists(outPutPath))
+                    {
+                        //创建根文件夹
+                        DirectoryInfo targetFolder = new DirectoryInfo(outPutPath);
+                        Console.WriteLine(targetFolder.FullName);
+                        targetFolder.Create();
+                        //传入目标路径和原路径
+                        pasteFolder(targetFolder.FullName, copyPath);
+                    }
+                }
+                if (File.Exists(copyPath))
+                {
+                    FileInfo fileInfo = new FileInfo(copyPath);
+                    Console.WriteLine(fileInfo.FullName);
+                    fileInfo.CopyTo(targetPath + fileInfo.Name);
+                 }
+            }
+            else
+            {
+                if (Directory.Exists(copyPath))
+                {
+                    DirectoryInfo directoryInfo = new DirectoryInfo(copyPath);
+                    directoryInfo.MoveTo(targetPath + directoryInfo.Name);
+                }
+                if (File.Exists(copyPath))
+                {
+                    FileInfo fileInfo = new FileInfo(copyPath);
+                    fileInfo.MoveTo(targetPath + fileInfo.Name);
+                }
+                isMoveTo = false;
+            }
+            copyPath = null;
+            refreshList();
+        }
+
+        //粘贴文件夹(目标路径，被复制路径)
+        public void pasteFolder(string targetPath, string parentPath)
+        {
+            DirectoryInfo parentFolder = new DirectoryInfo(parentPath);
+            //获取folderPath下的所有目录和文件的路径
+            string[] arr = Directory.GetFileSystemEntries(parentPath);
+            foreach (string inPutPath in arr)
+            {
+                //如果是文件夹
+                if (Directory.Exists(inPutPath))
+                {
+                    DirectoryInfo inPutFolder = new DirectoryInfo(inPutPath);
+                    string outPutPath = targetPath + "\\" + inPutFolder.Name;
+                    //判断输入文件夹是否已存在于输出路径
+                    if (!Directory.Exists(outPutPath))
+                    {
+                        //创建输出文件夹
+                        DirectoryInfo copyDirectoryInfo = new DirectoryInfo(outPutPath);
+                        copyDirectoryInfo.Create();
+                        Console.WriteLine(copyDirectoryInfo.FullName);
+                        //传入目标路径和原路径
+                        pasteFolder(copyDirectoryInfo.FullName, inPutPath);
+                    }
+                }
+                //如果是文件
+                if (File.Exists(inPutPath))
+                {
+                    FileInfo fileInfo = new FileInfo(inPutPath);
+                    Console.WriteLine(targetPath + "\\" + fileInfo.Name);
+                    fileInfo.CopyTo(targetPath   + "\\" + fileInfo.Name);
+                }
+                refreshList();
+            }
+        }
+
+        //移动文件夹或文件
+        public void moveTo(string path)
+        {
+            copy(path);
         }
 
         //重命名文件
@@ -304,6 +398,23 @@ namespace BLL
             }
         }
 
+        //批量删除
+        public void deleteBatches(System.Collections.IList list)
+        {
+            try
+            {
+                for (int i = list.Count-1; i >=0 ; i--)
+                {
+                    int ListIndex = (int)list[i];
+                    delete(curPath + listView.Items[ListIndex].Text);
+                }
+            }
+            finally
+            {
+                refreshList();
+            }
+        }
+
         //删除文件或文件夹
         public void delete(string path)
         {
@@ -323,10 +434,6 @@ namespace BLL
             catch (Exception e)
             {
                 MessageBox.Show("错误：" + e.ToString());
-            }
-            finally
-            {
-                refreshList();
             }
         }
 
@@ -498,7 +605,7 @@ namespace BLL
             //如果path是文件夹
             if (Directory.Exists(path))
             {
-                path = pathCompletion(path);
+                path = pathAuto(path);
                 if (testFolderAccess(path))
                 {
                     //更新路径
@@ -732,7 +839,7 @@ namespace BLL
         //更新路径
         private void updatePath(string newPath)
         {
-            curPath = pathCompletion(newPath);
+            curPath = pathAuto(newPath);
             curPathText.Text = curPath;
             //是否保存路径
             if (addPath)
@@ -745,7 +852,7 @@ namespace BLL
         }
         
         //为结尾没有“\”的路径补上“\”
-        private static string pathCompletion(string newPath)
+        private static string pathAuto(string newPath)
         {
             //如果结尾没有“\”则补上
             if (!newPath.EndsWith("\\"))
@@ -801,13 +908,13 @@ namespace BLL
         {
             //openMenuItem;         打开
             //refreshMenuItem;      刷新
+            //moveToMenuItem;       剪切
             //copyMenuItem;         复制
             //pasteMenuItem;        粘贴
             //deleteMenuItem;       删除
             //renameMenuItem;       重命名
             //newMenuItem;          新建
             //attributeMenuItem;    属性
-            
             //当前路径不可用
             if (curPath == null)
             {
@@ -823,6 +930,7 @@ namespace BLL
             if (fileName == null)
             {
                 openMenuItem.Visible = false;
+                moveToMenuItem.Visible = false;
                 copyMenuItem.Visible = false;
                 deleteMenuItem.Visible = false;
                 renameMenuItem.Visible = false;
@@ -831,6 +939,7 @@ namespace BLL
             else
             {
                 openMenuItem.Visible = true;
+                moveToMenuItem.Visible = true;
                 copyMenuItem.Visible = true;
                 deleteMenuItem.Visible = true;
                 renameMenuItem.Visible = true;
@@ -840,6 +949,14 @@ namespace BLL
             if (curPath == null && fileName == null)
             {
                 attributeMenuItem.Visible = false;
+            }
+            if (copyPath == null)
+            {
+                pasteMenuItem.Enabled = false;
+            }
+            else
+            {
+                pasteMenuItem.Enabled = true;
             }
         }
 
