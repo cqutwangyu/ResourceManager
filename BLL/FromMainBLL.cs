@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace BLL
 {
-    public class FromMainBLL
+    public class FromMainBLL : IFromMainBLL
     {
         //显示控件
         private TreeView treeView;
@@ -52,26 +52,6 @@ namespace BLL
         private IntPtr handle;
         private ImageList largeIconImageList;
         private ImageList smallImageList;
-
-        public FromMainBLL(TreeView treeView, ListView listView, TextBox curPathText,
-            ToolStripButton leftPathButton, ToolStripButton rightPathButton,
-            ToolStripButton backUpPathButton, CheckBox fileCheckBox,
-            CheckBox folderCheckBox, IntPtr handle, ImageList largeIconImageList, ImageList smallImageList, Label fileCountText)
-        {
-            this.treeView = treeView;
-            this.listView = listView;
-            this.curPathText = curPathText;
-            this.leftPathButton = leftPathButton;
-            this.rightPathButton = rightPathButton;
-            this.backUpPathButton = backUpPathButton;
-            this.fileCheckBox = fileCheckBox;
-            this.folderCheckBox = folderCheckBox;
-            this.handle = handle;
-            this.largeIconImageList = largeIconImageList;
-            this.smallImageList = smallImageList;
-            this.fileCountText = fileCountText;
-            this.startIndex = largeIconImageList.Images.Count;
-        }
 
         public FromMainBLL()
         {
@@ -972,7 +952,7 @@ namespace BLL
         }
 
         //根据扩展名获取图标 
-        public int fileExtIcon(string typeExt, FileInfo f)
+        private int fileExtIcon(string typeExt, FileInfo f)
         {
             try
             {
@@ -1013,13 +993,13 @@ namespace BLL
         }
         //获取系统图标 
         [DllImport("shell32.dll")]
-        public static extern int ExtractIcon(IntPtr h, string strx, int ii);
+        public static extern int extractIcon(IntPtr h, string strx, int ii);
         //获取从系统文件"shell32.dll"中获取图标
         public Icon getExtractIcon(string fileName, int iIndex)
         {
             try
             {
-                IntPtr hIcon = (IntPtr)ExtractIcon(handle, fileName, iIndex);
+                IntPtr hIcon = (IntPtr)extractIcon(handle, fileName, iIndex);
                 if (hIcon != IntPtr.Zero)
                 {
                     Icon icon = Icon.FromHandle(hIcon);

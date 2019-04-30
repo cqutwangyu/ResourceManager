@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FromMainBLL.cs" />
+    <Compile Include="IFromMainBLL.cs" />
     <Compile Include="ImgListIndexs.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
