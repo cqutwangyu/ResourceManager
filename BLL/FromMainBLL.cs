@@ -993,13 +993,13 @@ namespace BLL
         }
         //获取系统图标 
         [DllImport("shell32.dll")]
-        public static extern int extractIcon(IntPtr h, string strx, int ii);
+        private static extern int ExtractIcon(IntPtr h, string strx, int ii);
         //获取从系统文件"shell32.dll"中获取图标
         public Icon getExtractIcon(string fileName, int iIndex)
         {
             try
             {
-                IntPtr hIcon = (IntPtr)extractIcon(handle, fileName, iIndex);
+                IntPtr hIcon = (IntPtr)ExtractIcon(handle, fileName, iIndex);
                 if (hIcon != IntPtr.Zero)
                 {
                     Icon icon = Icon.FromHandle(hIcon);
