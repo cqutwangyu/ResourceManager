@@ -36,6 +36,7 @@ namespace UI
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.openMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.refreshMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.moveToMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.copyMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pasteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.deleteMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,7 +70,6 @@ namespace UI
             this.fileCountText = new System.Windows.Forms.Label();
             this.folderCheckBox = new System.Windows.Forms.CheckBox();
             this.fileCheckBox = new System.Windows.Forms.CheckBox();
-            this.moveToMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip.SuspendLayout();
             this.head.SuspendLayout();
             this.panel5.SuspendLayout();
@@ -121,42 +121,49 @@ namespace UI
             // openMenuItem
             // 
             this.openMenuItem.Name = "openMenuItem";
-            this.openMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.openMenuItem.Size = new System.Drawing.Size(123, 24);
             this.openMenuItem.Text = "打开";
             this.openMenuItem.Click += new System.EventHandler(this.openMenuItem_Click);
             // 
             // refreshMenuItem
             // 
             this.refreshMenuItem.Name = "refreshMenuItem";
-            this.refreshMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.refreshMenuItem.Size = new System.Drawing.Size(123, 24);
             this.refreshMenuItem.Text = "刷新";
             this.refreshMenuItem.Click += new System.EventHandler(this.refreshMenuItem_Click);
+            // 
+            // moveToMenuItem
+            // 
+            this.moveToMenuItem.Name = "moveToMenuItem";
+            this.moveToMenuItem.Size = new System.Drawing.Size(123, 24);
+            this.moveToMenuItem.Text = "剪切";
+            this.moveToMenuItem.Click += new System.EventHandler(this.moveToMenuItem_Click);
             // 
             // copyMenuItem
             // 
             this.copyMenuItem.Name = "copyMenuItem";
-            this.copyMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.copyMenuItem.Size = new System.Drawing.Size(123, 24);
             this.copyMenuItem.Text = "复制";
             this.copyMenuItem.Click += new System.EventHandler(this.copyMenuItem_Click);
             // 
             // pasteMenuItem
             // 
             this.pasteMenuItem.Name = "pasteMenuItem";
-            this.pasteMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.pasteMenuItem.Size = new System.Drawing.Size(123, 24);
             this.pasteMenuItem.Text = "粘贴";
             this.pasteMenuItem.Click += new System.EventHandler(this.pasteMenuItem_Click);
             // 
             // deleteMenuItem
             // 
             this.deleteMenuItem.Name = "deleteMenuItem";
-            this.deleteMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.deleteMenuItem.Size = new System.Drawing.Size(123, 24);
             this.deleteMenuItem.Text = "删除";
             this.deleteMenuItem.Click += new System.EventHandler(this.deleteMenuItem_Click);
             // 
             // renameMenuItem
             // 
             this.renameMenuItem.Name = "renameMenuItem";
-            this.renameMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.renameMenuItem.Size = new System.Drawing.Size(123, 24);
             this.renameMenuItem.Text = "重命名";
             this.renameMenuItem.Click += new System.EventHandler(this.renameMenuItem_Click);
             // 
@@ -166,7 +173,7 @@ namespace UI
             this.newFolderMenuItem,
             this.newFileMenuItem});
             this.newMenuItem.Name = "newMenuItem";
-            this.newMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.newMenuItem.Size = new System.Drawing.Size(123, 24);
             this.newMenuItem.Text = "新建";
             // 
             // newFolderMenuItem
@@ -186,7 +193,7 @@ namespace UI
             // attributeMenuItem
             // 
             this.attributeMenuItem.Name = "attributeMenuItem";
-            this.attributeMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.attributeMenuItem.Size = new System.Drawing.Size(123, 24);
             this.attributeMenuItem.Text = "属性";
             // 
             // treeImageList
@@ -435,6 +442,7 @@ namespace UI
             this.folderCheckBox.TabIndex = 1;
             this.folderCheckBox.Text = "显示文件夹";
             this.folderCheckBox.UseVisualStyleBackColor = true;
+            this.folderCheckBox.Visible = false;
             this.folderCheckBox.CheckedChanged += new System.EventHandler(this.folderCheckBox_CheckedChanged);
             // 
             // fileCheckBox
@@ -449,14 +457,8 @@ namespace UI
             this.fileCheckBox.TabIndex = 0;
             this.fileCheckBox.Text = "显示文件";
             this.fileCheckBox.UseVisualStyleBackColor = true;
+            this.fileCheckBox.Visible = false;
             this.fileCheckBox.CheckedChanged += new System.EventHandler(this.fileCheckBox_CheckedChanged);
-            // 
-            // moveToMenuItem
-            // 
-            this.moveToMenuItem.Name = "moveToMenuItem";
-            this.moveToMenuItem.Size = new System.Drawing.Size(210, 24);
-            this.moveToMenuItem.Text = "剪切";
-            this.moveToMenuItem.Click += new System.EventHandler(this.moveToMenuItem_Click);
             // 
             // FromMain
             // 

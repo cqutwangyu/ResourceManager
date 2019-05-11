@@ -52,6 +52,8 @@ namespace BLL
         private IntPtr handle;
         private ImageList largeIconImageList;
         private ImageList smallImageList;
+        bool folderCheBoxShow = false;
+        bool fileCheBoxShow = false;
 
         public FromMainBLL()
         {
@@ -677,6 +679,8 @@ namespace BLL
             listView.Columns.Add("大小", 120);
             listView.BeginUpdate();
             listView.Items.Clear();
+            folderCheBoxShow = false;
+            fileCheBoxShow = false;
             //如果显示文件夹为选中状态
             if (folderCheckBox.Checked)
             {
@@ -686,6 +690,16 @@ namespace BLL
             if (fileCheckBox.Checked)
             {
                 listViewShowFileItems(curPath);
+            }
+            if (folderCheBoxShow && fileCheBoxShow)
+            {
+                folderCheckBox.Visible = true;
+                fileCheckBox.Visible = true;
+            }
+            else
+            {
+                folderCheckBox.Visible = false;
+                fileCheckBox.Visible = false;
             }
             fileCountText.Text = listView.Items.Count+"个项目";
             listView.EndUpdate();
@@ -697,6 +711,7 @@ namespace BLL
             //编历当前分区或文件夹所有目录
             foreach (string dirName in Directory.GetDirectories(curPath))
             {
+                folderCheBoxShow = true;
                 DirectoryInfo directoryInfo = new DirectoryInfo(dirName);
                 ListViewItem listItem = new ListViewItem(directoryInfo.Name, ImgListIndexs.Folder);
                 listItem.Text = directoryInfo.Name;
@@ -713,6 +728,7 @@ namespace BLL
             //编历当前分区或文件夹所有文件
             foreach (string fileName in Directory.GetFiles(curPath))
             {
+                fileCheBoxShow = true;
                 fileImgIndex = getImgIndex(fileName);
                 FileInfo fileInfo = new FileInfo(fileName);
                 ListViewItem listItem = new ListViewItem(fileInfo.Name, fileImgIndex);
