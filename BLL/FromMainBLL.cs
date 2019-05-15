@@ -696,7 +696,7 @@ namespace BLL
                 folderCheckBox.Visible = true;
                 fileCheckBox.Visible = true;
             }
-            else
+            else if(folderCheckBox.Checked && fileCheckBox.Checked)
             {
                 folderCheckBox.Visible = false;
                 fileCheckBox.Visible = false;
